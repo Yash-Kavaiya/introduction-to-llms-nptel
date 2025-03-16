@@ -1,6 +1,6 @@
 # Lec 01 : Introduction and Recent Advances
 
-# Large Language Models: Course Overview 🤖
+## Large Language Models: Course Overview 🤖
 
 ## Course Information 📚
 
@@ -357,5 +357,404 @@ graph TD
    - Participate in related research projects
 
 > 📌 Note: All readings are optional but highly recommended for a deeper understanding of the field.
->
-> 
+
+# 🤖 Text Generation with Language Models 📝
+
+## How LMs Generate Text 🔄
+
+> **Core Concept**: LMs can generate new text by calculating probabilities of token sequences and sampling from these distributions.
+
+## Mathematical Foundation 📊
+
+### Probability Chain Rule 🧮
+
+Language models use the **chain rule of probability** to calculate the likelihood of token sequences:
+
+$$P(x_{1:L}) = P(x_1) \cdot P(x_2|x_1) \cdot P(x_3|x_1,x_2) \cdot ... \cdot P(x_L|x_{L-1}) = \prod_{i=1}^{L} P(x_i|x_{1:i-1})$$
+
+### Token Sequence Analysis 🔍
+
+| Component | Mathematical Notation | Meaning |
+|-----------|------------------------|---------|
+| Token Sequence | {x₁, x₂, ..., xₗ} | Tokens from vocabulary V |
+| Joint Probability | P(x₁, x₂, ..., xₗ) = P(x₁:ₗ) | Probability of entire sequence |
+| Conditional Probability | P(xᵢ\|x₁:ᵢ₋₁) | Probability of next token given previous tokens |
+
+## Generation Process 🚀
+
+```mermaid
+graph LR
+    A["Input Context 'the monsoon rains have'"] --> B["Calculate P(xᵢ | context) ∀xᵢ∈V"]
+    B --> C["Probability Distribution"]
+    C --> D["Sample Next Token xᵢ ~ P(xᵢ | x₁:ᵢ₋₁)"]
+    D --> E["Generated Token"]
+    E --> F["Append to Context"]
+    F -->|"Repeat"| B
+```
+
+## Example Prediction 📈
+
+Given input "the monsoon rains have", the model calculates probabilities for all possible next tokens:
+
+| Next Token | Probability | Likelihood |
+|------------|-------------|------------|
+| arrived    | ~0.38       | ⭐⭐⭐⭐⭐ |
+| delhi      | ~0.05       | ⭐         |
+| have       | ~0.02       | ⭐         |
+| is         | ~0.04       | ⭐         |
+| monsoon    | ~0.02       | ⭐         |
+| rains      | ~0.05       | ⭐         |
+| the        | ~0.30       | ⭐⭐⭐⭐   |
+
+## Technical Implementation 🔧
+
+- 🔹 **Auto-regressive LMs** calculate distributions efficiently
+- 🔹 Uses "Deep" Neural Networks for processing
+- 🔹 Sampling techniques control randomness in generation
+- 🔹 Vocabulary constraints determine possible outputs
+
+# 📊 Large Language Models (LLMs) Explained
+
+## What Makes LLMs "Large"? 🔍
+
+> **Two Key Dimensions**: The "Large" in Large Language Models refers to both **model size (# parameters)** and **massive training datasets**.
+
+## Evolution of Model Size 📈
+
+| Model | Organization | Date | Size (parameters) |
+|-------|-------------|------|-------------------|
+| ELMo | AI2 | Feb 2018 | 94,000,000 |
+| GPT | OpenAI | Jun 2018 | 110,000,000 |
+| BERT | Google | Oct 2018 | 340,000,000 |
+| XLM | Facebook | Jan 2019 | 655,000,000 |
+| GPT-2 | OpenAI | Mar 2019 | 1,500,000,000 |
+| RoBERTa | Facebook | Jul 2019 | 355,000,000 |
+| Megatron-LM | NVIDIA | Sep 2019 | 8,300,000,000 |
+| T5 | Google | Oct 2019 | 11,000,000,000 |
+| Turing-NLG | Microsoft | Feb 2020 | 17,000,000,000 |
+| GPT-3 | OpenAI | May 2020 | 175,000,000,000 |
+| Megatron-Turing NLG | Microsoft, NVIDIA | Oct 2021 | 530,000,000,000 |
+| Gopher | DeepMind | Dec 2021 | 280,000,000,000 |
+
+## Explosive Growth 🚀
+
+- ⚡ Model sizes have increased by an order of **5000x** over just 4 years!
+- 🧠 From millions to hundreds of billions of parameters (2018-2021)
+
+## Training Data Scale 📚
+
+```mermaid
+graph LR
+    A[ELMo] -->|10^8 tokens| B[ELMo large]
+    B -->|10^9 tokens| C[BERT/BERT multilingual]
+    C -->|10^9 tokens| D[GPT]
+    D -->|10^10 tokens| E[GPT-2]
+    E -->|10^12 tokens| F[GPT-3]
+```
+
+## Latest Giant Models 🏆
+
+| Model | Parameters | Notes |
+|-------|------------|-------|
+| PaLM | 540B | Google |
+| OPT | 175B | Meta |
+| BLOOM | 176B | BigScience |
+| Gemini-Ultra | 1.56T* | Google |
+| GPT-4 | 1.76T* | OpenAI |
+
+*️⃣ *Disclaimer: For API-based models like GPT-4/Gemini-Ultra, parameter counts are not officially announced - these are rumored numbers from the web*
+
+# 🤖 LLMs in the AI Landscape: A Visual Hierarchy
+
+## The Nested Structure of AI Technologies 🏗️
+
+```mermaid
+graph TD
+    A[Artificial Intelligence] --> B[Machine Learning]
+    B --> C[Deep Learning]
+    C --> D[Large Language Models]
+    C --> E[GenAI]
+    E <--> D
+```
+
+## Hierarchical Relationships 📊
+
+| Layer | Technology | Description | Example Capabilities |
+|-------|------------|-------------|----------------------|
+| 🔴 Outermost | **Artificial Intelligence** | Systems with human-like intelligence | Reasoning, problem-solving |
+| 🟠 Second | **Machine Learning** | Algorithms that learn rules automatically from data | Pattern recognition, prediction |
+| 🟡 Third | **Deep Learning** | Machine learning with neural networks consisting of many layers | Feature extraction, complex pattern recognition |
+| 🟢 Inner | **Large Language Models** | Deep neural networks for parsing and generating human-like text | Text generation, understanding context |
+| 🔵 Overlapping | **GenAI** | Neural networks creating new content (text, images, media) | Creative content generation, multimodal outputs |
+
+## Key Relationships 🔍
+
+> **LLMs are specialized deep learning models** focused primarily on natural language processing, while sharing technological foundations with the broader generative AI field.
+
+### Technological Nesting 🎯
+
+- 🔹 **AI** encompasses all intelligent systems
+- 🔹 **Machine Learning** represents a data-driven approach to AI
+- 🔹 **Deep Learning** leverages neural networks with multiple layers
+- 🔹 **LLMs** specialize in language understanding and generation
+- 🔹 **GenAI** spans multiple creative domains (text, images, other media)
+
+## Applications Across Domains 🌐
+
+- 📝 **Text**: Document generation, summarization, translation
+- 🎨 **Visual**: Image creation, modification, style transfer
+- 🔊 **Audio**: Speech synthesis, music composition
+- 🎬 **Multimodal**: Combined text-image-audio generation
+
+# 📚 Evolution of Language Models: Historical Timeline 🚀
+
+> **A Journey Through LLM Development**: From early rule-based systems to modern neural architectures
+
+## Timeline of Key Milestones 🕰️
+
+```mermaid
+timeline
+    title Evolution of Language Model Technology
+    1966 : ELIZA - First conversational agent
+    1972 : STNLP - Statistical NLP by Terry Winograd
+    1997 : LSTM Networks revolutionize sequence learning
+    1999 : NVIDIA GPU introduction enables future ML acceleration
+    2000 : IBM Model 1 statistical translation system
+    2006 : Facebook AI Research (FAIR) established
+    2013 : IBM Tangora speech recognition (20,000 words)
+    2014 : Google Brain deep learning project
+    2015 : Google TPUs & OpenAI founded
+    2016 : Stanford SQuAD dataset released
+    2017 : Transformer architecture introduced
+```
+
+## Detailed Milestone Breakdown 📊
+
+| Year | Milestone | Organization | Significance | Impact |
+|------|-----------|--------------|-------------|--------|
+| 1966 | **ELIZA** | MIT (Weizenbaum) | First program to simulate conversations | 🔹 Pioneered human-computer interaction |
+| 1972 | **STNLP** | MIT (Winograd) | Statistical language model generating text | 🔹 Early statistical approach to NLP |
+| 1997 | **LSTM** | Hochreiter & Schmidhuber | Recurrent neural network architecture | 🔹 Enabled learning from sequential data |
+| 1999 | **NVIDIA GPU** | NVIDIA | First Graphics Processing Unit | 🔹 Hardware acceleration for future AI |
+| 2000 | **IBM Model 1** | IBM | Statistical machine translation | 🔹 Foundation for translation systems |
+| 2006 | **FAIR Founded** | Facebook | Research lab established | 🔹 Corporate investment in AI research |
+| 2013 | **IBM Tangora** | IBM | Speech recognition system | 🔹 Advanced spoken language processing |
+| 2014 | **Google Brain** | Google | Deep learning research project | 🔹 Large-scale neural network research |
+| 2015 | **Google TPUs** | Google | Tensor Processing Units | 🔹 Custom hardware for AI acceleration |
+| 2015 | **OpenAI Founded** | OpenAI | AI research organization | 🔹 Dedicated to beneficial general AI |
+| 2016 | **Stanford SQuAD** | Stanford | Question-answering dataset | 🔹 Benchmark dataset for NLP research |
+| 2017 | **Transformer Models** | Google | "Attention is All You Need" paper | 🔹 Architecture powering modern LLMs |
+
+## Technology Paradigm Shifts 🌈
+
+### Three Eras of Language Models 📝
+
+1. **Rule-based Era** (1960s-1990s)
+   - 🔸 ELIZA (1966): Pattern matching and scripted responses
+   - 🔸 STNLP (1972): Statistical rules for text generation
+
+2. **Neural Network Era** (1997-2017)
+   - 🔸 LSTM (1997): Learning from sequences with memory
+   - 🔸 Hardware advances: GPUs (1999) and TPUs (2015)
+   - 🔸 Research infrastructure: Google Brain (2014), FAIR (2006)
+
+3. **Transformer Era** (2017-Present)
+   - 🔸 Attention mechanisms revolutionize NLP
+   - 🔸 Foundation for GPT, BERT, and all modern LLMs
+   - 🔸 Enabled scaling to billions of parameters
+# 📊 The Evolution of Large Language Models (2017-2023) 📚
+
+## 🔄 Transformer Revolution (2017-2018)
+
+> **Attention is All You Need** - The paper that started it all
+
+| Year | Model | Organization | Breakthrough Contribution |
+|------|-------|--------------|---------------------------|
+| 2017 | **Transformers** | Google | Introduced attention mechanisms revolutionizing NLP |
+| 2018 | **BERT** | Google | Pre-training of Deep Bidirectional Transformers for Language Understanding |
+
+## 🚀 The Scaling Begins (2019)
+
+### GPT-2: Unsupervised Multitask Learning
+
+```mermaid
+graph LR
+    A[GPT-1 (117M)] -->|13x larger| B[GPT-2 (1.5B)]
+```
+
+- 🔹 **Parameter Jump**: 117M → 1.5B (13x increase)
+- 🔹 **Context Length**: 512 → 1024 tokens
+- 🔹 **Architecture**: Minimal changes (LayerNorms, weight initialization)
+
+### Scaling Impact on Performance
+- 📈 Reading Comprehension: Consistent improvements as parameters increased
+- 📈 Translation: Better performance than unsupervised statistical MT
+- 📈 Summarization: Approached supervised methods
+- 📈 Question Answering: Significant gains with scale
+
+### Parallel Developments
+- 🧪 **T5** (Google, 2019): Unified Text-to-Text Transformer
+- 🧪 **RoBERTa** (Meta, 2019): Optimized BERT pretraining
+  - Revealed BERT was significantly undertrained
+- 🧪 **XLM** (Meta, 2019): Cross-lingual Language Model Pretraining
+
+## 💯 The Race to Scale (2020-2022)
+
+| Year | Model | Organization | Size | Open/Closed |
+|------|-------|--------------|------|-------------|
+| 2020 | **GPT-3** | OpenAI | 175B | ❌ Closed |
+| 2021-22 | **Megatron-Turing NLG** | Microsoft/NVIDIA | 530B | ❌ Closed |
+| 2022 | **PaLM** | Google | 540B | ❌ Closed |
+| 2022 | **OPT** | Meta | 125M-175B | ✅ Open-sourced |
+| 2022 | **Gopher/Chinchilla** | DeepMind | | ❌ Closed |
+| 2022 | **Codex** | OpenAI | | ❌ Closed |
+
+> **Critical Shift**: OpenAI stops open-sourcing, beginning the "LLM Race" 🏁
+
+## 🌟 The ChatGPT Moment (November 30, 2022)
+- Transformed consumer AI landscape and public perception
+
+## 🔥 2023: The Year of Rapid Development
+
+| Month | Model | Organization | Significance |
+|-------|-------|--------------|-------------|
+| February | **Bard** | Google | Consumer chatbot |
+| February | **LLaMA** | Meta | Family of open-source models |
+| March | **Claude** | Anthropic | Founded by ex-OpenAI researchers |
+| March | **GPT-4** | OpenAI | Multimodal capabilities |
+| June | **Phi-1** | Microsoft | 1.3B parameter LLM for code |
+| September | **Mistral 7B** | Mistral AI | Compact but powerful model |
+| November | **Grok** | xAI | | 
+| December | **Gemini** | Google | Multimodal capabilities |
+
+## 📝 Key Trends
+
+- 📊 **Exponential Scaling**: Parameter counts jumped from millions to hundreds of billions
+- 🔍 **Architectural Innovation**: From Transformers to specialized variants
+- 🔄 **Open vs. Closed**: Shifting from open research to proprietary models
+- 🌐 **Corporate Competition**: Google vs OpenAI vs Meta vs Microsoft
+- 💡 **Capabilities Expansion**: From text prediction to few-shot learning & multimodal processing
+
+# 🧠 Why Study Large Language Models Separately? 🚀
+
+## Emergent Capabilities Transform the Landscape 📈
+
+> "Although the technical machineries are almost similar, 'just scaling up' these models results in new emergent behaviors, which lead to significantly different capabilities and societal impacts."
+
+### The Emergence Phenomenon 🌟
+
+```mermaid
+graph TD
+    A[Small Language Models] --> B[Scale Up Parameters]
+    A[Small Language Models] --> C[Scale Up Training Data]
+    B & C --> D[Large Language Models]
+    D --> E[Emergent Capabilities]
+    E --> F[In-context Learning]
+    E --> G[Few-shot Learning]
+    E --> H[Tool Use]
+    E --> I[Chain-of-thought Reasoning]
+```
+
+## Key Emergent Capabilities 🔍
+
+| Capability | Description | Previously Possible? |
+|------------|-------------|----------------------|
+| **In-context Learning** | Models perform tasks with only prompts, no fine-tuning | ❌ No |
+| **Few-shot Learning** | Models learn from minimal examples | ❌ Limited |
+| **Chain-of-thought** | Step-by-step reasoning for complex problems | ❌ No |
+| **Multimodal Understanding** | Processing multiple types of data | ❌ Limited |
+
+## 🏢 Real-World Adoption & Impact
+
+### Research Applications 📚
+- 🔹 State-of-the-art performance across NLP tasks
+- 🔹 Sentiment classification, question answering
+- 🔹 Summarization, machine translation
+
+### Industry Implementation 💼
+- 🔹 **Google Search**: BERT integration
+- 🔹 **Facebook**: Content moderation via XLM
+- 🔹 **Microsoft**: Azure OpenAI Service (GPT-3/3.5/4)
+
+## ⚠️ Critical Risks & Challenges
+
+### Four Major Concern Areas
+
+1. **Reliability & Disinformation** 🔮
+   - LLMs frequently "hallucinate" non-factual information
+   - Critical issue for high-stakes domains (healthcare, legal)
+
+2. **Social Bias** ⚖️
+   - Performance disparities across demographic groups
+   - Example: `P(He is a doctor) > P(She is a doctor)`
+   - Reinforcement of harmful stereotypes
+
+3. **Toxicity Generation** 🚫
+   - Training on internet data (Reddit, etc.) includes offensive content
+   - Challenges for writing assistants and public-facing chatbots
+
+4. **Security Vulnerabilities** 🔒
+   - Training on public internet creates attack vectors
+   - Susceptibility to data poisoning attacks
+
+## 📊 The Emergence-Risk Relationship
+
+```mermaid
+graph LR
+    A[Increased Scale] --> B[Emergent Capabilities]
+    A --> C[Broader Applications]
+    B & C --> D[Greater Impact]
+    D --> E[Higher Stakes]
+    E --> F[Amplified Risks]
+    F --> G[Need for Specialized Study]
+```
+
+> **Course Rationale**: The unique emergent properties of LLMs, their widespread adoption, and their distinctive risk profiles necessitate specialized study beyond traditional language model courses.
+
+# 🚀 Practical Learning Strategies for LLMs 🧠
+
+## Hands-On Experimentation is Key! 🔬
+
+> "LLM Research is all about implementing and experimenting with your ideas. Rule of thumb: Never believe in any hypothesis until your experiments verify it!"
+
+### 🛠️ Recommended Learning Approach
+
+```mermaid
+graph LR
+    A[Theoretical Concepts] --> B[Hands-on Experimentation]
+    B --> C[Hypothesis Verification]
+    C --> D[Real Understanding]
+    D --> E[New Ideas & Applications]
+```
+
+### 📊 Model Accessibility Options
+
+| Model Size | Where to Run | Tools | Hardware Requirements |
+|------------|--------------|-------|----------------------|
+| **Small** (GPT-2, DistilBERT) | Google Colab / Kaggle | Hugging Face | Basic GPU |
+| **Medium** (7B parameter models) | Colab/Local with quantization | Hugging Face, GGML | Mid-range GPU |
+| **Large** (>13B) | Cloud services | API access | Professional GPU setup |
+
+### 💡 Implementation Tips
+
+#### Platform Resources 🔗
+- 🔹 [**Hugging Face**](https://huggingface.co/) - Model hub with easy implementation
+- 🔹 [**Kaggle**](https://www.kaggle.com/) - Notebooks with free GPU access
+- 🔹 [**Google Colab**](https://colab.research.google.com/) - Free GPU/TPU access
+
+#### Model Optimization Techniques 🔧
+- 🔹 **Quantization** - Reduce precision to run larger models
+- 🔹 **Pruning** - Remove unnecessary weights
+- 🔹 **Knowledge Distillation** - Create smaller, efficient versions
+
+### ⚡ The Experimental Mindset
+
+> **Always get your hands dirty!**
+
+1. 📝 **Formulate clear hypotheses**
+2. 🔍 **Design controlled experiments**
+3. 📊 **Measure results systematically**
+4. 🧪 **Iterate on failures**
+5. 📈 **Document everything**
+
+Remember: In LLM research, practical verification trumps theoretical assumptions every time!
