@@ -1,0 +1,341 @@
+# Question
+
+**State whether the following statement is True/False:**
+*The Perceptron learning algorithm can solve problems with non-linearly separable data.*
+
+- True
+- **False** ✓
+
+## Explanation
+
+The Perceptron learning algorithm **cannot** solve problems with non-linearly separable data. This is one of its fundamental limitations.
+
+### Why this is false:
+
+1. **Linear Decision Boundary**: The Perceptron is a linear classifier that creates a straight-line decision boundary (in 2D) or a hyperplane (in higher dimensions).
+
+2. **XOR Problem**: The classic example demonstrating this limitation is the XOR problem, which cannot be solved by a single Perceptron because it requires a non-linear decision boundary.
+
+3. **Convergence Guarantee**: The Perceptron convergence theorem only guarantees that the algorithm will converge to a solution if the training data is linearly separable.
+
+4. **Historical Context**: This limitation was famously highlighted in the 1969 book "Perceptrons" by Minsky and Papert, which demonstrated the inability of single-layer Perceptrons to learn non-linearly separable functions.
+
+To solve non-linearly separable problems, more advanced neural network architectures are required, such as multi-layer Perceptrons (MLPs) with hidden layers and non-linear activation functions.
+
+# Question
+
+**In backpropagation, which method is used to compute the gradients?**
+
+- Gradient descent
+- **Chain rule of derivatives** ✓
+- Matrix factorization
+- Linear regression
+
+## Explanation
+
+The **chain rule of derivatives** is the fundamental mathematical principle used in backpropagation to compute gradients. Let me explain why this is correct and why the other options are incorrect:
+
+### Chain Rule of Derivatives (Correct)
+- Backpropagation computes gradients by working backwards through the network to determine how each parameter affects the final loss
+- Since a neural network consists of composite functions (layers stacked on each other), the chain rule allows us to calculate derivatives through these nested functions
+- Specifically, if $f(g(x))$ is a composite function, the chain rule states that $\frac{d}{dx}f(g(x)) = \frac{df}{dg} \cdot \frac{dg}{dx}$
+- This principle extends through all layers of a neural network, allowing us to calculate $\frac{\partial L}{\partial w}$ (the gradient of the loss with respect to any weight)
+
+### Gradient Descent (Incorrect)
+- Gradient descent is an optimization algorithm that *uses* the gradients computed via backpropagation
+- It determines how to update weights based on gradients, but isn't the method for computing the gradients themselves
+- The relationship: backpropagation (using chain rule) computes gradients, then gradient descent uses these gradients to update weights
+
+### Matrix Factorization (Incorrect)
+- This is a technique used primarily in recommendation systems and dimensionality reduction
+- It decomposes a matrix into a product of matrices but is not directly related to computing gradients in neural networks
+
+### Linear Regression (Incorrect)
+- This is a statistical modeling technique for establishing relationships between variables
+- While gradient-based methods can be used to train linear regression models, it is not a method for computing gradients
+
+The chain rule's ability to decompose complex derivatives into simpler components is what makes backpropagation computationally feasible in deep neural networks.
+
+# Question
+
+**Which activation function outputs values in the range [−1,1]?**
+- ReLU
+- **Tanh** ✓
+- Sigmoid
+- Linear
+
+## Explanation
+
+The **hyperbolic tangent (tanh)** function is the only activation function among the options that outputs values precisely in the range [-1, 1].
+
+### Analysis of each option:
+
+#### Tanh (Correct)
+- Mathematical definition: $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$
+- Range: [-1, 1]
+- As x approaches positive infinity, tanh(x) approaches 1
+- As x approaches negative infinity, tanh(x) approaches -1
+- At x = 0, tanh(x) = 0
+- Tanh is a scaled and shifted version of the sigmoid function
+
+#### ReLU (Incorrect)
+- Mathematical definition: $\text{ReLU}(x) = \max(0, x)$
+- Range: [0, ∞)
+- For all negative inputs, ReLU outputs 0
+- For all positive inputs, ReLU outputs the input value unchanged
+- Does not have an upper bound
+
+#### Sigmoid (Incorrect)
+- Mathematical definition: $\sigma(x) = \frac{1}{1 + e^{-x}}$
+- Range: (0, 1)
+- As x approaches positive infinity, sigmoid approaches 1
+- As x approaches negative infinity, sigmoid approaches 0
+- Does not include -1 in its range
+
+#### Linear (Incorrect)
+- Mathematical definition: $f(x) = x$
+- Range: (-∞, ∞)
+- No transformation applied to the input
+- Outputs the input unchanged
+- Has no upper or lower bound
+
+Tanh is often used in hidden layers of neural networks when outputs need to be bounded and centered around zero.
+
+# Question
+
+**What is the primary goal of regularization in machine learning?**
+- To improve the computational efficiency of the model
+- **To reduce overfitting** ✓
+- To increase the number of layers in a network
+- To minimize the loss function directly
+
+## Explanation
+
+### To reduce overfitting (Correct)
+Regularization techniques are primarily designed to prevent models from becoming too specialized to the training data. When a model learns the training data too well—including its noise and outliers—it performs poorly on new, unseen data. This phenomenon is called overfitting.
+
+Common regularization methods include:
+- **L1 regularization (Lasso)**: Adds the absolute value of weights to the loss function, encouraging sparsity
+- **L2 regularization (Ridge)**: Adds the squared magnitude of weights to the loss function, constraining their size
+- **Dropout**: Randomly deactivates neurons during training to prevent co-adaptation
+- **Early stopping**: Halts training before the model becomes too specialized
+- **Data augmentation**: Artificially expands the training set to expose the model to more variation
+
+### To improve the computational efficiency of the model (Incorrect)
+Regularization methods typically add computational overhead by introducing additional terms to the loss function or additional operations during training. While some methods like pruning can improve inference efficiency as a side effect, this is not the primary goal of regularization.
+
+### To increase the number of layers in a network (Incorrect)
+Regularization has no direct relationship with increasing network depth. In fact, deeper networks are more prone to overfitting and thus often require more aggressive regularization. Techniques like batch normalization help train deeper networks but are separate from the core concept of regularization.
+
+### To minimize the loss function directly (Incorrect)
+Regularization actually works against directly minimizing the training loss by adding penalty terms to the loss function. This forces the model to balance between fitting the training data and maintaining simplicity or generality. The regularized model may have higher training loss but better generalization to new data.
+
+The fundamental purpose of regularization is to improve the model's ability to generalize beyond the training data by preventing it from learning patterns that are specific to the training set but not representative of the broader data distribution.
+
+# Question
+
+**Which of the following is a regularization technique where we randomly deactivate neurons during training?**
+- Early stopping
+- L1 regularization
+- **Dropout** ✓
+- Weight decay
+
+## Explanation
+
+### Dropout (Correct)
+Dropout is a regularization technique introduced by Hinton et al. that specifically involves randomly deactivating (or "dropping out") neurons during training. 
+
+- During each training iteration, each neuron has a probability p of being temporarily removed from the network
+- This prevents neurons from co-adapting too much and forces the network to learn more robust features
+- At test time, all neurons are present but their outputs are scaled by the keep probability (1-p)
+- Conceptually, dropout approximates training an ensemble of many different neural networks
+
+### Early Stopping (Incorrect)
+Early stopping is a regularization technique that involves:
+- Monitoring the validation error during training
+- Stopping the training process when the validation error begins to increase
+- Using the model parameters from the point of minimum validation error
+- This prevents overfitting by not allowing the model to train for too many epochs
+- Unlike dropout, it doesn't involve any modification to the network structure
+
+### L1 Regularization (Incorrect)
+L1 regularization (also known as Lasso regularization):
+- Adds the sum of the absolute values of the weights to the loss function: λ∑|w|
+- Encourages sparsity in the model by driving some weights exactly to zero
+- Performs feature selection implicitly
+- Modifies the optimization objective but doesn't randomly deactivate neurons
+
+### Weight Decay (Incorrect)
+Weight decay:
+- Is another term for L2 regularization (or Ridge regularization)
+- Adds the sum of squared weights to the loss function: λ∑w²
+- Penalizes large weight values by "decaying" them toward zero
+- Prevents any single feature from having too much influence
+- Affects the magnitude of weights but doesn't involve randomly removing neurons
+
+Dropout stands out as the only technique that specifically implements the random deactivation of neurons during the training process as described in the question.
+
+# Question
+
+**Which activation function has the vanishing gradient problem for large positive or negative inputs?**
+- ReLU
+- **Sigmoid** ✓
+- GELU
+- Swish
+
+## Explanation
+
+The **sigmoid** activation function suffers from the vanishing gradient problem for both large positive and large negative inputs.
+
+### Sigmoid (Correct)
+- Mathematical definition: $\sigma(x) = \frac{1}{1 + e^{-x}}$
+- Range: (0, 1)
+- Gradient/derivative: $\sigma'(x) = \sigma(x)(1 - \sigma(x))$
+- For large positive inputs (x >> 0), sigmoid approaches 1, and its gradient approaches 0
+- For large negative inputs (x << 0), sigmoid approaches 0, and its gradient also approaches 0
+- This causes the vanishing gradient problem during backpropagation, as the chain rule multiplies these near-zero gradients, making learning extremely slow in deep networks
+
+### ReLU (Incorrect)
+- Mathematical definition: $f(x) = \max(0, x)$
+- For positive inputs, gradient is exactly 1, no matter how large the input
+- For negative inputs, gradient is 0 (known as the "dying ReLU" problem)
+- While ReLU has the "dying ReLU" issue for negative inputs, it doesn't suffer from vanishing gradients for large positive inputs
+
+### GELU (Incorrect)
+- Mathematical definition: $\text{GELU}(x) = x \cdot \Phi(x)$ where $\Phi$ is the CDF of the standard normal distribution
+- Has better gradient flow properties than sigmoid
+- While it saturates somewhat for large negative values, it grows linearly for large positive values
+- Does not suffer from severe gradient vanishing in both directions
+
+### Swish (Incorrect)
+- Mathematical definition: $f(x) = x \cdot \sigma(\beta x)$ where $\sigma$ is the sigmoid function
+- For large negative values, approaches 0
+- For large positive values, approaches the input x itself
+- Has bounded gradients for negative values but unbounded for positive values
+- Designed specifically to address the vanishing gradient issue of sigmoid
+
+The sigmoid's symmetrical gradient vanishing (approaching zero for both large positive and negative inputs) makes it particularly problematic for deep networks, which led to the development of alternative activation functions like ReLU, GELU, and Swish.
+
+# Question
+
+**What does the backpropagation algorithm compute in a neural network?**
+- Loss function value at each epoch
+- **Gradients of the loss function with respect to weights of the network** ✓
+- Activation values of the output layer
+- Output of each neuron
+
+## Explanation
+
+### Gradients of the loss function with respect to weights of the network (Correct)
+
+Backpropagation is the fundamental algorithm that enables neural networks to learn from data by efficiently computing how each weight in the network contributes to the overall error. Specifically:
+
+- It calculates the partial derivatives ∂L/∂w for each weight w in the network, where L is the loss function
+- These gradients indicate the direction and magnitude that each weight should be adjusted to reduce the error
+- The algorithm works by applying the chain rule of calculus, propagating the error backwards from the output layer to earlier layers
+- The computed gradients are then used by optimization algorithms (like gradient descent) to update the weights
+
+### Loss function value at each epoch (Incorrect)
+
+- The loss function value is calculated during the forward pass, not by backpropagation
+- The forward pass computes the network's prediction, which is then compared to the target value to calculate the loss
+- This loss value is an input to backpropagation, not its output
+- While the loss is tracked during training to monitor progress, computing it is separate from backpropagation
+
+### Activation values of the output layer (Incorrect)
+
+- Activation values (including those of the output layer) are computed during the forward pass
+- The forward pass sequentially applies each layer's weights and activation functions to the input data
+- Backpropagation uses these activation values as inputs to compute gradients, but doesn't compute the activations themselves
+- The activation values represent the network's predictions, which occur before backpropagation begins
+
+### Output of each neuron (Incorrect)
+
+- The output of each neuron (its activation value) is determined during the forward pass
+- These outputs are intermediate calculations needed for both loss computation and backpropagation
+- Backpropagation uses these outputs to determine how to adjust weights, but calculating these outputs is not the function of backpropagation
+- Computing neuron outputs is part of the forward propagation phase of training
+
+Backpropagation's power comes from its computational efficiency—it avoids redundant calculations when computing gradients in multi-layer networks by reusing intermediate results, making deep learning computationally feasible.
+
+# Question
+
+**Which type of regularization encourages sparsity in the weights?**
+- **L1 regularization** ✓
+- L2 regularization
+- Dropout
+- Early stopping
+
+## Explanation
+
+### L1 Regularization (Correct)
+L1 regularization (also known as Lasso regularization) is specifically designed to encourage sparsity in model weights. It works by:
+
+- Adding the sum of absolute values of weights to the loss function: L_regularized = L_original + λ∑|w|
+- Mathematically penalizing weights in a way that drives many weights exactly to zero when λ is sufficiently large
+- Creating sparse solutions where only the most important features retain non-zero weights
+- Effectively performing automatic feature selection by eliminating less relevant features
+- This sparsity makes models more interpretable and can reduce model complexity
+
+### L2 Regularization (Incorrect)
+L2 regularization (also known as Ridge regularization or weight decay):
+- Adds the sum of squared weights to the loss function: L_regularized = L_original + λ∑w²
+- Shrinks all weights proportionally toward zero, but rarely makes them exactly zero
+- Results in small but non-zero weights distributed across all features
+- Does not produce sparse solutions, as the quadratic penalty doesn't have the mathematical property to drive weights to exactly zero
+- Prefers solutions with many small weights rather than few large weights
+
+### Dropout (Incorrect)
+Dropout:
+- Randomly deactivates neurons during training with some probability p
+- Forces the network to learn more robust features that don't depend on specific neuron co-adaptations
+- Acts as an ensemble method by effectively training many different sub-networks
+- While it reduces overfitting, it doesn't directly target the weights' magnitudes or promote sparsity
+- Affects the training process rather than imposing a direct penalty on weight values
+
+### Early Stopping (Incorrect)
+Early stopping:
+- Halts training when validation error begins to increase
+- Prevents the model from overfitting by limiting training time
+- Does not directly modify the optimization objective or the weight structure
+- Simply selects weights from an earlier point in training before overfitting occurs
+- Has no mechanism to specifically encourage sparsity in the weight matrix
+
+L1 regularization's ability to produce sparse weight matrices makes it particularly valuable in high-dimensional problems where feature selection is important.
+
+# Question
+
+**What is the main purpose of using hidden layers in an MLP?**
+- Helps to the network bigger
+- Enables us to handle linearly separable data
+- **Learn complex and nonlinear relationships in the data** ✓
+- Minimize the computational complexity
+
+## Explanation
+
+### Learn complex and nonlinear relationships in the data (Correct)
+Hidden layers are the fundamental components that give Multilayer Perceptrons (MLPs) their power and flexibility. They enable:
+
+- **Nonlinear transformations**: Through activation functions like ReLU, sigmoid, or tanh, hidden layers introduce nonlinearity into the network
+- **Feature hierarchy**: Each successive layer can learn increasingly complex representations of the data
+- **Universal function approximation**: With sufficient hidden neurons, MLPs can theoretically approximate any continuous function
+- **Overcoming XOR and similar problems**: Hidden layers solve problems that single-layer networks cannot (like the XOR problem)
+
+### Helps to the network bigger (Incorrect)
+- While hidden layers do make the network larger, this is a side effect, not the purpose
+- Simply making a network "bigger" doesn't guarantee better performance
+- This option also contains grammatical errors, indicating it's not a well-formulated answer
+
+### Enables us to handle linearly separable data (Incorrect)
+- This is the exact opposite of the truth
+- Linearly separable data can be handled by a simple perceptron without any hidden layers
+- The key contribution of hidden layers is handling NON-linearly separable data
+- A single-layer perceptron (without hidden layers) is sufficient for linearly separable problems
+
+### Minimize the computational complexity (Incorrect)
+- Adding hidden layers actually increases computational complexity
+- More layers mean more parameters to train and more calculations during both forward and backward passes
+- While techniques exist to manage this complexity (like efficient matrix operations), hidden layers inherently add computational burden
+- The trade-off of increased complexity is accepted because of the improved modeling capability
+
+The ability to learn complex nonlinear patterns is what makes neural networks with hidden layers so powerful for tasks ranging from image recognition to natural language processing.
