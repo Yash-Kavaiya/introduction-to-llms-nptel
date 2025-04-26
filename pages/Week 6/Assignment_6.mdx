@@ -1,0 +1,296 @@
+# Assignment 6 
+
+# Multi-Head Attention Analysis
+
+## Question
+What is the key advantage of multi-head attention?
+- It uses a single attention score for the entire sequence
+- It allows attending to different parts of the input sequence simultaneously
+- It eliminates the need for normalization
+- It reduces the model size
+
+## Correct Answer
+**It allows attending to different parts of the input sequence simultaneously**
+
+## Detailed Explanation
+
+### It uses a single attention score for the entire sequence
+**Incorrect.** This statement describes the opposite of multi-head attention's approach. Single-head attention would use one attention mechanism with a single set of projection matrices to compute attention scores. Multi-head attention specifically divides the attention computation into multiple parallel heads, each producing different attention distributions. Having multiple heads is the defining characteristic that distinguishes it from single-head attention mechanisms.
+
+### It allows attending to different parts of the input sequence simultaneously
+**Correct.** This is the key advantage of multi-head attention. By splitting the attention mechanism into multiple heads, each with its own set of learned parameters (query, key, and value projection matrices), the model can simultaneously focus on different aspects of the input sequence. Each head can learn to capture different linguistic patterns:
+- Some heads might focus on local syntax relationships
+- Others might capture long-range dependencies
+- Some might attend to semantic relationships
+- Others might focus on positional patterns
+
+This parallel processing of different attention patterns allows the model to capture richer representations that wouldn't be possible with a single attention mechanism, improving performance across various NLP tasks.
+
+### It eliminates the need for normalization
+**Incorrect.** Multi-head attention does not eliminate the need for normalization. In fact, Transformer architectures, which popularized multi-head attention, typically employ layer normalization both before and after the attention mechanism (in the pre-LN or post-LN configuration). Normalization remains essential for stabilizing training dynamics and improving convergence, regardless of whether single or multi-head attention is used.
+
+### It reduces the model size
+**Incorrect.** Multi-head attention typically increases the parameter count compared to single-head attention of equivalent dimension. While each individual head operates in a lower-dimensional space (the embedding dimension divided by the number of heads), the total parameter count across all heads is generally equal to or greater than that of a single head working in the full embedding space. The advantage of multi-head attention comes from its increased representational power, not from parameter efficiency.
+
+The simultaneous attention to different representation subspaces is what gives Transformers much of their power and has contributed significantly to their success across a wide range of sequence modeling tasks.
+
+--------
+
+# Role of Residual Connections in Transformer Architecture
+
+## Question
+What is the role of the residual connection in the Transformer architecture?
+- Improve gradient flow during backpropagation
+- Normalize input embeddings
+- Reduce computational complexity
+- Prevent overfitting
+
+## Correct Answer
+**Improve gradient flow during backpropagation**
+
+## Detailed Explanation
+
+### Improve gradient flow during backpropagation
+**Correct.** Residual connections (also called skip connections) are a fundamental component of the Transformer architecture that create shortcuts allowing information to bypass layers by adding the input of a sublayer directly to its output: `output = sublayer(input) + input`. 
+
+This design serves several critical functions:
+1. It creates direct paths for gradients to flow backward through the network during training
+2. It helps mitigate the vanishing gradient problem that typically affects deep networks
+3. It enables training of much deeper networks than would otherwise be possible
+4. It allows the network to maintain access to lower-level features throughout its depth
+
+Without residual connections, Transformers would struggle with optimization issues as gradients would need to flow through every layer sequentially, becoming increasingly small with network depth.
+
+### Normalize input embeddings
+**Incorrect.** Normalization in Transformers is handled by separate Layer Normalization (LayerNorm) components, not by residual connections. The typical structure involves applying layer normalization either before the sublayer (Pre-LN) or after the residual connection (Post-LN). While residual connections and normalization work together to stabilize training, they serve distinct functions—residual connections maintain information flow while normalization stabilizes the distribution of activations.
+
+### Reduce computational complexity
+**Incorrect.** Residual connections actually add a small amount of computation (an addition operation) rather than reducing complexity. While they enable more efficient training by improving gradient flow and optimization, they don't directly decrease the computational requirements of the model. The primary computational costs in Transformers come from the attention mechanisms and feed-forward networks, not from the residual connections.
+
+### Prevent overfitting
+**Incorrect.** While properly trained deep networks with residual connections may generalize better, preventing overfitting is not the primary purpose of residual connections. Transformers use other dedicated mechanisms to combat overfitting, such as dropout applied to attention weights and to outputs of various sublayers. Residual connections are primarily an architectural feature for improving optimization rather than a regularization technique.
+
+The importance of residual connections is so fundamental that they appear in virtually every variant of Transformer architecture since the original "Attention Is All You Need" paper, highlighting their essential role in enabling the remarkable success of Transformer models.
+
+----------
+
+# Rotary Position Embedding (RoPE) Analysis
+
+## Question
+For Rotary Position Embedding (RoPE), which of the following statements are true?
+- Combines relative and absolute positional information
+- Applies a multiplicative rotation matrix to encode positions
+- Eliminates the need for positional encodings
+- All of the above
+
+## Correct Answer
+**Combines relative and absolute positional information** AND **Applies a multiplicative rotation matrix to encode positions**
+
+The correct answer consists of the first two statements. "All of the above" is incorrect because the third statement is false.
+
+## Detailed Explanation
+
+### Combines relative and absolute positional information
+**TRUE.** One of RoPE's key innovations is its ability to simultaneously encode both absolute positions (where a token appears in the sequence) and relative positions (the distance between pairs of tokens). This dual encoding allows the self-attention mechanism to consider both a token's absolute location and its relationship to other tokens. The mathematical formulation of RoPE ensures that when computing attention between two positions, the result depends on their relative distance, while still preserving information about absolute positions.
+
+### Applies a multiplicative rotation matrix to encode positions
+**TRUE.** RoPE operates by applying rotation matrices to the query and key vectors in self-attention. For each position m, RoPE applies a rotation in each 2D subspace of the embedding dimensions. The rotation angle increases with position according to different frequencies for different dimensions. This is represented mathematically as:
+```
+q_m = R_θ,m q
+k_n = R_θ,n k
+```
+where R_θ,m is the rotation matrix for position m. The multiplicative nature of this operation (rather than the additive approach of traditional positional encodings) gives RoPE some of its favorable properties.
+
+### Eliminates the need for positional encodings
+**FALSE.** This statement fundamentally misunderstands what RoPE is. RoPE is itself a form of positional encoding, not a replacement for the concept of positional encodings. Transformer models inherently need some mechanism to incorporate sequence order, and RoPE provides this mechanism through its rotational approach. RoPE replaces traditional sinusoidal or learned positional encodings but still serves the essential function of injecting position information into the self-attention mechanism.
+
+### All of the above
+**FALSE.** Since the third statement is incorrect, "All of the above" cannot be true.
+
+RoPE has gained popularity in recent large language models like LLaMA and GPT-NeoX due to its superior properties for extrapolating to longer sequences than seen during training and its elegant mathematical properties that make relative position calculations more efficient in the attention mechanism.
+
+--------
+
+# Masked Self-Attention Weight Calculation
+
+## Question
+Consider a sequence of tokens of length 4: [w1,w2,w3,w4]. Using masked self-attention, compute the attention weights for token w3, assuming the unmasked attention scores are: [5,2,1,3]
+- [0.6234, 0.023, 0.3424, 0.0112]
+- [0.2957, 0.7043, 0, 0]
+- [0.9362, 0.0466, 0.0171,0]
+- [0.5061, 0.437, 0, 0.0569]
+
+## Correct Answer
+**[0.9362, 0.0466, 0.0171,0]**
+
+## Detailed Explanation
+
+In masked self-attention, a key constraint is that tokens can only attend to themselves and preceding tokens in the sequence. This causal masking prevents information leakage from future tokens during training, which is crucial for autoregressive models.
+
+### Step 1: Apply the mask to the attention scores
+Since we're computing attention for token w3 (position 3 in a 1-indexed system), it can only attend to positions 1, 2, and 3 (w1, w2, and w3). Position 4 (w4) must be masked out since it's a "future" token from w3's perspective.
+
+Original unmasked scores: [5, 2, 1, 3]
+After applying causal mask: [5, 2, 1, -∞]
+
+Here, we set the score for w4 to negative infinity (or a very large negative number in practice), ensuring its attention weight will be zero after softmax.
+
+### Step 2: Apply softmax to convert scores to weights
+The softmax function converts our masked scores into a probability distribution:
+softmax(x_i) = exp(x_i) / Σexp(x_j)
+
+Computing the exponentials:
+- exp(5) ≈ 148.4132
+- exp(2) ≈ 7.3891
+- exp(1) ≈ 2.7183
+- exp(-∞) = 0
+
+Sum of exponentials: 148.4132 + 7.3891 + 2.7183 + 0 = 158.5206
+
+### Step 3: Calculate the normalized attention weights
+- w1: 148.4132 / 158.5206 ≈ 0.9362
+- w2: 7.3891 / 158.5206 ≈ 0.0466
+- w3: 2.7183 / 158.5206 ≈ 0.0171
+- w4: 0 / 158.5206 = 0
+
+Therefore, the attention weights are [0.9362, 0.0466, 0.0171, 0].
+
+This means that when processing token w3, the model primarily focuses on information from w1 (about 94% of the attention), with small contributions from w2 and w3, and no influence from w4. This causal masking mechanism ensures the autoregressive property of the model during training, preventing it from "cheating" by looking at future tokens.
+
+------
+
+# Feature Scaling Techniques Analysis
+
+## Question
+___________ maps the values of a feature in the range [0,1].
+- Standardization
+- Normalization
+- Transformation
+- Scaling
+
+## Correct Answer
+**Normalization**
+
+## Detailed Explanation
+
+### Standardization
+**Incorrect.** Standardization (also known as Z-score normalization) transforms data to have a mean of 0 and a standard deviation of 1. The formula is:
+
+$$z = \frac{x - \mu}{\sigma}$$
+
+Where:
+- $x$ is the original value
+- $\mu$ is the mean of the feature
+- $\sigma$ is the standard deviation
+
+This technique centers the data around zero and scales it according to its standard deviation. Importantly, standardized values are not bounded and can range from negative infinity to positive infinity, depending on the original data distribution. This makes standardization unsuitable when the goal is to constrain values to the specific range [0,1].
+
+### Normalization
+**Correct.** Normalization, specifically min-max normalization, scales all values of a feature to fall within a specified range, typically [0,1]. The formula is:
+
+$$x_{normalized} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+
+Where:
+- $x$ is the original value
+- $x_{min}$ is the minimum value of the feature
+- $x_{max}$ is the maximum value of the feature
+
+This transformation guarantees that the minimum value maps to 0, the maximum value maps to 1, and all other values are proportionally scaled within this range. Min-max normalization preserves the relationships among the original data values and is particularly useful for algorithms that require input features on a similar scale, such as neural networks and algorithms using distance metrics.
+
+### Transformation
+**Incorrect.** Transformation is a general term referring to any mathematical operation that changes data values. It encompasses a wide variety of techniques including logarithmic transformations, power transformations, and feature engineering. While some transformations could potentially map values to [0,1], the term alone does not specifically describe a technique guaranteed to produce this range.
+
+### Scaling
+**Incorrect.** Scaling is a broad term for changing the range of data values but doesn't specify which range. It includes both standardization and normalization as well as other techniques. Without additional specification, scaling doesn't necessarily map values to [0,1] or any other particular range.
+
+Normalization (min-max scaling) is the specific technique that ensures all values fall precisely within the [0,1] range, making it essential for algorithms sensitive to the scale and range of input features.
+
+
+--------
+
+
+# Masked Self-Attention in Autoregressive Models
+
+## Question
+How does masked self-attention help in autoregressive models?
+- By attending to all tokens, including future ones.
+- By focusing only on past tokens to prevent information leakage.
+- By ignoring positional information in the sequence.
+- By disabling the attention mechanism entirely.
+
+## Correct Answer
+**By focusing only on past tokens to prevent information leakage.**
+
+## Detailed Explanation
+
+### By attending to all tokens, including future ones
+**Incorrect.** This approach would directly contradict the fundamental principle of autoregressive models, which generate sequences one token at a time, with each new token depending only on previously generated tokens. If a model could attend to future tokens during training, it would "see" outputs it's trying to predict, creating a form of target leakage that would prevent proper learning of the conditional probability distribution P(xₜ|x₁,...,xₜ₋₁).
+
+### By focusing only on past tokens to prevent information leakage
+**Correct.** Masked self-attention implements the autoregressive property by ensuring that when computing attention for a token at position t, the model can only attend to tokens at positions ≤ t. This is achieved by applying a triangular mask to the attention scores before softmax normalization:
+
+```
+attention_mask[i, j] = {
+    0    if j ≤ i    (allow attending to past and current tokens)
+    -∞   if j > i    (prevent attending to future tokens)
+}
+```
+
+By setting attention scores for future positions to negative infinity (or a large negative number in practice), their contribution after softmax becomes zero. This mechanism ensures:
+1. The model learns proper conditional distributions during training
+2. Each prediction is based solely on previously observed context
+3. The model can be applied autoregressively during generation
+
+### By ignoring positional information in the sequence
+**Incorrect.** Masked self-attention does not ignore positional information—quite the opposite. The mask itself is based on positional relationships (whether one token comes before another). Additionally, Transformer models explicitly incorporate positional information through positional encodings added to token embeddings. Without positional information, the model would not be able to distinguish between different orderings of the same tokens, making effective sequence modeling impossible.
+
+### By disabling the attention mechanism entirely
+**Incorrect.** Masked self-attention modifies the attention mechanism but certainly doesn't disable it. The attention mechanism remains the core computational component, allowing the model to selectively focus on relevant parts of the input sequence. The masking simply constrains which parts of the sequence can be attended to, ensuring the autoregressive property while preserving the powerful representational capabilities of attention.
+
+The causal masking approach is essential for autoregressive models like GPT, ensuring they can generate coherent sequences by respecting the temporal dependencies inherent in sequential data.
+
+-------
+
+# Transformer Positional Encoding Calculation
+
+## Question
+For a transformer with dmodel = 512, calculate the positional encoding for position p=10 and dimensions 2 and 3 using the sinusoidal formula.
+
+## Detailed Explanation
+
+To solve this problem, I need to apply the sinusoidal positional encoding formula from the original Transformer paper ("Attention Is All You Need"). The formula for positional encoding is:
+
+$$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+$$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+Where:
+- `pos` is the position in the sequence (given as 10)
+- `i` is the dimension pair index (for dimensions 2 and 3, i = 1)
+- `dmodel` is the embedding dimension (given as 512)
+
+### Step 1: Determine the dimension pair index
+In the positional encoding formula, dimensions are paired (0,1), (2,3), (4,5), etc.
+- Dimension 2 corresponds to the formula with 2i where i = 1
+- Dimension 3 corresponds to the formula with 2i+1 where i = 1
+
+### Step 2: Calculate the denominator term
+$$10000^{2i/d_{model}} = 10000^{2 \cdot 1/512} = 10000^{2/512} = 10000^{1/256}$$
+
+Computing this value:
+$$10000^{1/256} = (10^4)^{1/256} = 10^{4/256} = 10^{1/64} \approx 1.03663$$
+
+### Step 3: Calculate the positional encodings
+
+For dimension 2 (using sin formula):
+$$PE_{(10,2)} = \sin\left(\frac{10}{1.03663}\right) = \sin(9.64645) \approx -0.19866$$
+
+For dimension 3 (using cos formula):
+$$PE_{(10,3)} = \cos\left(\frac{10}{1.03663}\right) = \cos(9.64645) \approx -0.98006$$
+
+### Final Answer
+The positional encoding values are:
+- For position 10, dimension 2: PE(10,2) ≈ -0.19866
+- For position 10, dimension 3: PE(10,3) ≈ -0.98006
+
+These values ensure that the Transformer model can distinguish between different positions in the input sequence, as the positional encoding creates a unique pattern for each position across the embedding dimensions.
