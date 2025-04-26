@@ -1,0 +1,335 @@
+# Assignment 4
+
+# Question: What is the main drawback of representing words as one-hot vectors?
+
+## Options:
+- They cannot capture semantic similarity between words.
+- They are computationally inefficient.
+- They cannot incorporate word order effectively.
+- They are not robust to unseen words.
+
+## Correct Answer:
+**They cannot capture semantic similarity between words.**
+
+## Detailed Explanation:
+
+### One-hot Vector Representation
+A one-hot vector represents each word as a vector where all elements are 0 except for a single element which is 1. For example, in a vocabulary of 10,000 words, each word is represented as a 10,000-dimensional vector with a single 1 and 9,999 zeros.
+
+### Analysis of Each Option:
+
+1. **They cannot capture semantic similarity between words** ✓
+   - This is the primary drawback. In one-hot encoding, every word vector is orthogonal to every other word vector.
+   - The dot product between any two different word vectors is always 0.
+   - The Euclidean distance between any two different word vectors is always √2.
+   - Consequently, semantically similar words like "dog" and "puppy" appear as equally dissimilar as unrelated words like "dog" and "calculator."
+   - This limitation led to the development of distributed word representations like word2vec and GloVe, which can capture semantic relationships.
+
+2. **They are computationally inefficient**
+   - While true (one-hot vectors are sparse and high-dimensional), this is a secondary concern.
+   - Modern systems can handle the computational aspects through optimized sparse vector operations.
+
+3. **They cannot incorporate word order effectively**
+   - This isn't a specific limitation of one-hot vectors but rather of any word-level representation.
+   - Even with dense word embeddings, additional structures (RNNs, Transformers, etc.) are needed to capture word order.
+
+4. **They are not robust to unseen words**
+   - This is a valid limitation (the "out-of-vocabulary" problem) but affects all fixed-vocabulary representations.
+   - This issue can be addressed through techniques like subword tokenization, which isn't specific to one-hot encoding.
+
+The inability to capture semantic similarity is the fundamental conceptual limitation that distinguishes one-hot vectors from more advanced word representation methods.
+
+----
+
+# Question: What is the key concept underlying Word2Vec?
+
+## Options:
+- Ontological semantics
+- Decompositional semantics
+- Distributional semantics
+- Morphological analysis
+
+## Correct Answer:
+**Distributional semantics**
+
+## Detailed Explanation:
+
+### Word2Vec and Its Underlying Principle
+Word2Vec is a technique for learning word embeddings (dense vector representations of words) from large text corpora. It was developed by Tomas Mikolov and his team at Google in 2013.
+
+### Analysis of Each Option:
+
+1. **Ontological semantics**
+   - This approach represents meaning through formal ontologies (structured knowledge bases with explicitly defined concepts and relationships).
+   - Word2Vec does not rely on predefined hierarchies or taxonomies of meaning.
+   - Unlike ontological approaches, Word2Vec learns relationships purely from observed language use.
+
+2. **Decompositional semantics**
+   - This approach breaks down word meanings into primitive semantic features or components.
+   - Word2Vec doesn't explicitly decompose meanings into semantic primitives.
+   - It treats words as atomic units and learns their representations holistically.
+
+3. **Distributional semantics** ✓
+   - This is based on the distributional hypothesis: "words that occur in similar contexts tend to have similar meanings."
+   - J.R. Firth summarized this as: "You shall know a word by the company it keeps."
+   - Word2Vec directly implements this principle by:
+     - Skip-gram model: predicting context words given a target word
+     - CBOW model: predicting a target word given its context words
+   - The resulting word vectors capture semantic similarity based on distributional patterns.
+   - Words appearing in similar contexts will have similar vector representations.
+
+4. **Morphological analysis**
+   - This involves analyzing word structure (roots, prefixes, suffixes).
+   - Standard Word2Vec treats each word form as a separate token without considering its internal structure.
+   - It doesn't analyze word formation processes or decompose words into morphemes.
+
+The distributional semantics approach is the theoretical foundation for Word2Vec and other embedding techniques like GloVe and FastText, enabling these models to capture semantic relationships between words based on their patterns of co-occurrence in natural language.
+
+-----
+
+# Question: Why is sub-sampling frequent words beneficial in Word2Vec?
+
+## Options:
+- It increases the computational cost.
+- It helps reduce the noise from high-frequency words.
+- It helps eliminate redundancy.
+- It prevents the model from learning embeddings for common words.
+
+## Correct Answer:
+**It helps reduce the noise from high-frequency words.**
+
+## Detailed Explanation:
+
+### Sub-sampling in Word2Vec
+Sub-sampling is a technique implemented in Word2Vec where high-frequency words are randomly discarded during training with a probability proportional to their frequency in the corpus.
+
+### Analysis of Each Option:
+
+1. **It increases the computational cost.**
+   - This is incorrect. Sub-sampling actually *decreases* computational cost.
+   - By removing instances of highly frequent words (like "the," "a," "in"), the total number of words to process is reduced.
+   - This results in faster training times and lower memory requirements.
+   - In the original Word2Vec implementation, Mikolov et al. showed that sub-sampling improved both accuracy and speed.
+
+2. **It helps reduce the noise from high-frequency words.** ✓
+   - This is correct and represents the primary motivation for sub-sampling.
+   - Very frequent words (like "the," "and," "of") appear in almost all contexts, making them less informative for learning semantic relationships.
+   - These words can dominate the training process due to their frequency without contributing proportional semantic value.
+   - Sub-sampling reduces their influence, allowing the model to focus more on meaningful co-occurrence patterns.
+   - The formula used in Word2Vec for sub-sampling (P(wi) = 1 - sqrt(t/f(wi))) specifically targets high-frequency words.
+
+3. **It helps eliminate redundancy.**
+   - While sub-sampling does reduce redundant occurrences of common words, this is a secondary effect rather than the primary purpose.
+   - The concept is related to reducing noise, but "redundancy" doesn't fully capture the statistical rationale behind sub-sampling.
+   - The issue isn't just that common words appear redundantly, but that their statistical significance is disproportionate to their semantic contribution.
+
+4. **It prevents the model from learning embeddings for common words.**
+   - This is incorrect. Sub-sampling doesn't prevent learning embeddings for common words.
+   - It merely reduces their frequency in the training data, not eliminates them completely.
+   - The model still learns quality embeddings for these words, often better ones because the training signal becomes less dominated by uninformative contexts.
+
+The key insight behind sub-sampling in Word2Vec is that words with very high frequency add little information value relative to how much they dominate the training process. By probabilistically removing some occurrences, we achieve better balance between frequency and information content.
+
+----
+
+# Question: Which word relations cannot be captured by word2vec?
+
+## Options:
+- Polysemy
+- Antonymy
+- Analogy
+- All of the these
+
+## Correct Answer:
+**Polysemy** and **Antonymy**
+
+## Detailed Explanation:
+
+### Word2Vec Capabilities and Limitations
+Word2Vec creates dense vector representations of words based on their distributional patterns in text. However, it has specific limitations in capturing certain word relationships:
+
+### Analysis of Each Option:
+
+1. **Polysemy** ✓
+   - Polysemy refers to words having multiple meanings (e.g., "bank" can be a financial institution or a river edge).
+   - Word2Vec represents each word with a single vector regardless of context.
+   - This creates a fundamental limitation: all meanings of a polysemous word are collapsed into a single representation.
+   - The vector becomes an average of all the word's uses across different contexts and meanings.
+   - More advanced models like contextual embeddings (e.g., BERT, ELMo) were developed specifically to address this limitation.
+   - Example: In Word2Vec, "bank" has one vector that confusingly combines its financial and geographical meanings.
+
+2. **Antonymy** ✓
+   - Antonymy refers to words with opposite meanings (e.g., "hot"/"cold", "good"/"bad").
+   - Word2Vec often places antonyms close together in vector space rather than far apart.
+   - This is because antonyms frequently appear in similar contexts: "The weather is hot" vs. "The weather is cold".
+   - According to the distributional hypothesis that drives Word2Vec, these similar contexts lead to similar vectors.
+   - The model doesn't distinguish between similarity and opposition in meaning.
+   - Example: "good" and "bad" may have relatively similar vectors despite having opposite meanings.
+
+3. **Analogy** ❌
+   - Word2Vec is actually renowned for its ability to capture analogical relationships.
+   - The famous example is: vec("king") - vec("man") + vec("woman") ≈ vec("queen")
+   - These relationships emerge from the distributional patterns in the training data.
+   - Word2Vec can represent many complex semantic relationships through vector arithmetic.
+   - This is one of the most celebrated features of Word2Vec, not a limitation.
+
+4. **All of these** ❌
+   - Since Word2Vec can effectively capture analogical relationships, this option is incorrect.
+
+The limitations of Word2Vec in handling polysemy and antonymy have motivated the development of more advanced embedding techniques, particularly contextual embeddings that generate different representations for the same word depending on its context of use.
+
+------
+
+# Question 5: Compute the cosine similarity between w₂ and w₅
+
+## Options:
+- 0.516
+- 0.881
+- 0.705
+- 0.641
+
+## Correct Answer:
+**0.641**
+
+## Detailed Explanation:
+
+To calculate the cosine similarity between two vectors, we use the formula:
+
+$$\text{cosine similarity} = \frac{\vec{a} \cdot \vec{b}}{||\vec{a}|| \cdot ||\vec{b}||} = \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \cdot \sqrt{\sum_{i=1}^{n} b_i^2}}$$
+
+### Step 1: Extract the vectors from the matrix.
+- Vector w₂ = [4, 2, 4, 1, 6, 2, 0]
+- Vector w₅ = [3, 5, 1, 0, 1, 2, 1]
+
+### Step 2: Calculate the dot product (numerator).
+w₂ · w₅ = (4×3) + (2×5) + (4×1) + (1×0) + (6×1) + (2×2) + (0×1)
+        = 12 + 10 + 4 + 0 + 6 + 4 + 0
+        = 36
+
+### Step 3: Calculate the magnitudes of each vector.
+||w₂|| = √(4² + 2² + 4² + 1² + 6² + 2² + 0²)
+       = √(16 + 4 + 16 + 1 + 36 + 4 + 0)
+       = √77
+       ≈ 8.775
+
+||w₅|| = √(3² + 5² + 1² + 0² + 1² + 2² + 1²)
+       = √(9 + 25 + 1 + 0 + 1 + 4 + 1)
+       = √41
+       ≈ 6.403
+
+### Step 4: Compute the cosine similarity.
+cosine similarity = 36 / (√77 × √41)
+                  = 36 / √3157
+                  = 36 / 56.188
+                  = 0.641
+
+Therefore, the cosine similarity between w₂ and w₅ is 0.641.
+
+-----
+
+# Question: Which word is most similar to w1 based on cosine similarity?
+
+## Options:
+- w2
+- w3
+- w4
+- w5
+
+## Correct Answer:
+**w5**
+
+## Detailed Explanation:
+
+To find which word is most similar to w1, I need to calculate the cosine similarity between w1 and each of the other word vectors, then identify which has the highest similarity value.
+
+### Step 1: Extract the vectors from the matrix
+- w1 = [1, 5, 3, 0, 1, 5, 7]
+- w2 = [4, 2, 4, 1, 6, 2, 0]
+- w3 = [2, 1, 9, 2, 5, 1, 5]
+- w4 = [5, 0, 7, 4, 2, 0, 4]
+- w5 = [3, 5, 1, 0, 1, 2, 1]
+
+### Step 2: Calculate cosine similarity for each pair
+
+Cosine similarity formula: cos(θ) = (A·B)/(||A||·||B||)
+
+**For w1 and w2:**
+- Dot product: w1·w2 = (1×4) + (5×2) + (3×4) + (0×1) + (1×6) + (5×2) + (7×0) = 4 + 10 + 12 + 0 + 6 + 10 + 0 = 42
+- ||w1|| = √(1² + 5² + 3² + 0² + 1² + 5² + 7²) = √(1 + 25 + 9 + 0 + 1 + 25 + 49) = √110 ≈ 10.488
+- ||w2|| = √(4² + 2² + 4² + 1² + 6² + 2² + 0²) = √(16 + 4 + 16 + 1 + 36 + 4 + 0) = √77 ≈ 8.775
+- Cosine similarity(w1, w2) = 42 / (10.488 × 8.775) ≈ 0.456
+
+**For w1 and w3:**
+- Dot product: w1·w3 = (1×2) + (5×1) + (3×9) + (0×2) + (1×5) + (5×1) + (7×5) = 2 + 5 + 27 + 0 + 5 + 5 + 35 = 79
+- ||w3|| = √(2² + 1² + 9² + 2² + 5² + 1² + 5²) = √141 ≈ 11.874
+- Cosine similarity(w1, w3) = 79 / (10.488 × 11.874) ≈ 0.634
+
+**For w1 and w4:**
+- Dot product: w1·w4 = (1×5) + (5×0) + (3×7) + (0×4) + (1×2) + (5×0) + (7×4) = 5 + 0 + 21 + 0 + 2 + 0 + 28 = 56
+- ||w4|| = √(5² + 0² + 7² + 4² + 2² + 0² + 4²) = √110 ≈ 10.488
+- Cosine similarity(w1, w4) = 56 / (10.488 × 10.488) ≈ 0.509
+
+**For w1 and w5:**
+- Dot product: w1·w5 = (1×3) + (5×5) + (3×1) + (0×0) + (1×1) + (5×2) + (7×1) = 3 + 25 + 3 + 0 + 1 + 10 + 7 = 49
+- ||w5|| = √(3² + 5² + 1² + 0² + 1² + 2² + 1²) = √41 ≈ 6.403
+- Cosine similarity(w1, w5) = 49 / (10.488 × 6.403) ≈ 0.730
+
+### Step 3: Compare the similarity values
+- Cosine similarity(w1, w2) ≈ 0.456
+- Cosine similarity(w1, w3) ≈ 0.634
+- Cosine similarity(w1, w4) ≈ 0.509
+- Cosine similarity(w1, w5) ≈ 0.730
+
+Since 0.730 is the highest cosine similarity value, **w5** is most similar to w1 according to this measure.
+
+
+------
+
+# Question: What is the difference between CBOW and Skip-Gram in Word2Vec?
+
+## Options:
+- CBOW predicts the context word given the target word, while Skip-Gram predicts the target word given the context words.
+- CBOW predicts the target word given the context words, while Skip-Gram predicts the context words given the target word.
+- CBOW is used for generating word vectors, while Skip-Gram is not.
+- Skip-Gram uses a thesaurus, while CBOW does not.
+
+## Correct Answer:
+**CBOW predicts the target word given the context words, while Skip-Gram predicts the context words given the target word.**
+
+## Detailed Explanation:
+
+Word2Vec is a technique for learning word embeddings that consists of two different model architectures: Continuous Bag of Words (CBOW) and Skip-Gram. These architectures differ fundamentally in their approach to the prediction task:
+
+### CBOW (Continuous Bag of Words)
+- **Direction of prediction**: Takes surrounding context words as input to predict a target word
+- **Example**: Given ["The", "cat", "on", "mat"], predict "sits" in the middle
+- **Input/Output**: Multiple words → Single word
+- **Architecture**: Multiple context word vectors are averaged before being used to predict the target word
+- **Training objective**: Maximize the probability of the target word given the context words
+- **Typical implementation**: Input layer → Hidden layer → Output layer (with softmax)
+
+### Skip-Gram
+- **Direction of prediction**: Takes a target word as input to predict surrounding context words
+- **Example**: Given "sits", predict the surrounding words ["The", "cat", "on", "mat"]
+- **Input/Output**: Single word → Multiple words
+- **Architecture**: The target word vector is used to predict each context word independently
+- **Training objective**: Maximize the probability of each context word given the target word
+- **Typical implementation**: Input layer → Hidden layer → Output layer (with softmax for each context position)
+
+### Analysis of Other Options:
+
+1. **"CBOW predicts the context word given the target word, while Skip-Gram predicts the target word given the context words."**
+   - This is incorrect because it reverses the actual prediction directions of both models.
+
+2. **"CBOW is used for generating word vectors, while Skip-Gram is not."**
+   - This is incorrect because both architectures generate word vectors.
+   - Both CBOW and Skip-Gram were introduced in the same paper by Mikolov et al. as alternative approaches for learning word embeddings.
+   - The word vectors are extracted from the weight matrices of the trained neural networks in both cases.
+
+3. **"Skip-Gram uses a thesaurus, while CBOW does not."**
+   - This is incorrect because neither approach uses a thesaurus.
+   - Both are unsupervised learning methods that rely solely on the distributional patterns in text.
+   - They learn semantic relationships entirely from word co-occurrence statistics rather than from external knowledge sources like thesauri.
+
+In practice, Skip-Gram often performs better with infrequent words and works well with small training datasets, while CBOW is generally faster to train and can provide better representations for frequent words.
+
