@@ -1,0 +1,278 @@
+# Assignment 7
+# Question: Which of the following best describes how ELMo's architecture captures different linguistic properties?
+
+## Options
+1. The model explicitly assigns specific linguistic functions to each layer.
+2. The lower layers capture syntactic information, while higher layers capture semantic information.
+3. All layers capture the similar properties.
+4. ELMo uses a fixed, non-trainable weighting scheme for combining layer-wise representations.
+
+## Correct Answer
+**The lower layers capture syntactic information, while higher layers capture semantic information.**
+
+## Explanation
+
+ELMo (Embeddings from Language Models) uses a bidirectional LSTM architecture to generate contextualized word embeddings. Let's analyze each option:
+
+### Option 1: The model explicitly assigns specific linguistic functions to each layer.
+❌ **Incorrect.** ELMo doesn't explicitly program or assign specific linguistic functions to different layers. Rather, these properties emerge naturally during the training process. The linguistic properties are learned implicitly through the language modeling objective.
+
+### Option 2: The lower layers capture syntactic information, while higher layers capture semantic information.
+✅ **Correct.** Research by Peters et al. (2018) demonstrated that in ELMo's architecture, the lower layers tend to learn more surface-level features such as syntax, part-of-speech information, and word order relationships. In contrast, the higher layers capture more abstract, contextual, and semantic relationships between words. This hierarchical organization of linguistic knowledge is an emergent property observed across many deep neural networks for NLP.
+
+### Option 3: All layers capture similar properties.
+❌ **Incorrect.** If all layers captured similar properties, there would be little benefit to ELMo's multi-layer architecture. The power of ELMo comes precisely from the fact that different layers specialize in different aspects of language.
+
+### Option 4: ELMo uses a fixed, non-trainable weighting scheme for combining layer-wise representations.
+❌ **Incorrect.** One of ELMo's innovations is that it uses task-specific, learnable weights to combine representations from different layers. These weights are trained alongside the downstream task model, allowing ELMo to adjust the importance of different linguistic features based on the specific requirements of each task.
+
+The hierarchical nature of linguistic information in ELMo (syntax in lower layers, semantics in higher layers) has been influential in the design of subsequent contextualized word embedding models and transformers.
+
+---
+# Question: BERT and BART models differ in their architectures. While BERT is (i)------- model, BART is (ii) -------- one. Select the correct choices for (i) and (ii).
+
+## Options
+1. i: Decoder-only , ii: Encoder-only
+2. i: Encoder-decoder , ii: Encoder-only
+3. i: Encoder-only , ii: Encoder-decoder
+4. i: Decoder-only , ii: Encoder-decoder
+
+## Correct Answer
+**i: Encoder-only , ii: Encoder-decoder**
+
+## Explanation
+
+### Option 1: i: Decoder-only, ii: Encoder-only
+❌ **Incorrect.** BERT is not a decoder-only model; it exclusively uses transformer encoder layers to process input text bidirectionally. Decoder-only models (like GPT) typically use masked self-attention to process text left-to-right. Additionally, BART is not encoder-only but uses both encoder and decoder components.
+
+### Option 2: i: Encoder-decoder, ii: Encoder-only
+❌ **Incorrect.** This option reverses the correct architectures. BERT doesn't have a decoder component for text generation, while BART does have both encoder and decoder components.
+
+### Option 3: i: Encoder-only, ii: Encoder-decoder
+✅ **Correct.** BERT (Bidirectional Encoder Representations from Transformers) is an encoder-only model consisting of a stack of transformer encoder blocks. It processes input text bidirectionally to create contextual representations but cannot generate text on its own. BART (Bidirectional and Auto-Regressive Transformers), on the other hand, is an encoder-decoder model that combines a bidirectional encoder similar to BERT with an autoregressive decoder, allowing it to both understand input text and generate new text.
+
+### Option 4: i: Decoder-only, ii: Encoder-decoder
+❌ **Incorrect.** BERT is not a decoder-only model. While this correctly identifies BART as an encoder-decoder model, it mischaracterizes BERT's architecture.
+
+The key distinction lies in their capabilities: BERT excels at understanding text and is primarily used for classification and extraction tasks, while BART's encoder-decoder architecture makes it well-suited for generative tasks like summarization, translation, and text completion.
+
+----
+# Question: The pre-training objective for the T5 model is based on:
+
+## Options
+1. Next sentence prediction
+2. Masked language modelling
+3. Span corruption and reconstruction
+4. Predicting the next token
+
+## Correct Answer
+**Span corruption and reconstruction**
+
+## Explanation
+
+### Option 1: Next sentence prediction
+❌ **Incorrect.** Next sentence prediction is a pre-training objective used in BERT, where the model is trained to determine whether two segments of text appear consecutively in the original text. T5 does not use this objective in its pre-training process. This objective helps models understand relationships between sentences but is not part of T5's design.
+
+### Option 2: Masked language modelling
+❌ **Incorrect.** While masked language modeling (MLM) is similar to T5's approach in that it involves predicting missing parts of text, there's an important distinction. Traditional MLM as used in BERT typically masks individual tokens randomly throughout the input. T5's approach is more structured and operates on spans rather than individual tokens.
+
+### Option 3: Span corruption and reconstruction
+✅ **Correct.** T5 (Text-to-Text Transfer Transformer) uses "span corruption" as its pre-training objective. In this approach:
+- Continuous spans of text (multiple tokens in sequence) are randomly selected
+- These spans are replaced with unique sentinel tokens (special placeholders)
+- The model is then trained to reconstruct the original spans that were removed
+- This approach helps the model learn to understand and generate coherent text segments
+
+This span-based approach differs from token-level masking and allows T5 to function effectively in its text-to-text framework, where all NLP tasks are framed as converting one text sequence to another.
+
+### Option 4: Predicting the next token
+❌ **Incorrect.** Predicting the next token (autoregressive language modeling) is the primary pre-training objective for models like GPT, where the model predicts the next token based on all previous tokens. While T5 does include a decoder component that works autoregressively during generation, its pre-training objective is specifically span corruption and reconstruction, not next-token prediction.
+
+The span corruption approach adopted by T5 combines aspects of both masked language modeling and sequence-to-sequence training, making it particularly effective for the text-to-text framework that allows T5 to handle diverse NLP tasks within a unified architecture.
+
+----
+# Question: Which of the following datasets was used to pretrain the T5 model?
+
+## Options
+1. Wikipedia
+2. BookCorpus
+3. Common Crawl
+4. C4
+
+## Correct Answer
+**C4**
+
+## Explanation
+
+### Option 1: Wikipedia
+❌ **Incorrect.** While Wikipedia is a commonly used dataset for pretraining many language models (including BERT and others), it was not the primary corpus used for pretraining T5. Wikipedia provides high-quality encyclopedic content but is significantly smaller than what was used for T5 pretraining.
+
+### Option 2: BookCorpus
+❌ **Incorrect.** BookCorpus is a collection of unpublished books that has been used alongside Wikipedia for pretraining models like BERT. However, this dataset was not used for T5. T5 required a much larger and more diverse dataset to achieve its scale of training.
+
+### Option 3: Common Crawl
+❌ **Incorrect.** While Common Crawl web data does serve as the foundation for the dataset used to pretrain T5, the model wasn't trained directly on raw Common Crawl data. Instead, the T5 researchers heavily processed and filtered Common Crawl to create a new, cleaner corpus.
+
+### Option 4: C4
+✅ **Correct.** T5 was pretrained on the "Colossal Clean Crawled Corpus" (C4). This dataset was specifically created for T5 by the Google Research team by applying extensive cleaning and filtering to Common Crawl web data. The cleaning process included:
+- Removing pages with less than 5 sentences
+- Filtering out pages with obscenities
+- Removing lines with placeholder or template text
+- Deduplicating content
+- Removing pages that didn't have a high percentage of natural language
+
+The resulting C4 dataset contained approximately 750GB of clean text data, which provided the scale and quality needed for T5's pretraining. This custom-built dataset was a key factor in T5's performance across various NLP tasks.
+
+-----
+# Question: Which of the following special tokens are introduced in BERT to handle sentence pairs?
+
+## Options
+1. [MASK] and [CLS]
+2. [SEP] and [CLS]
+3. [CLS] and [NEXT]
+4. [SEP] and [MASK]
+
+## Correct Answer
+**[SEP] and [CLS]**
+
+## Explanation
+
+### Option 1: [MASK] and [CLS]
+❌ **Incorrect.** While both these tokens are used in BERT, they don't specifically work together to handle sentence pairs. The [MASK] token is used during the Masked Language Modeling pre-training task where certain tokens are masked and the model is trained to predict them. While [CLS] is indeed used in sentence pairs (as explained below), the [MASK] token's purpose is not specifically related to handling sentence pairs.
+
+### Option 2: [SEP] and [CLS]
+✅ **Correct.** BERT introduces these two special tokens specifically to handle sentence pairs:
+- **[CLS]** (Classification): Placed at the beginning of every input sequence. For sentence pairs, it serves as an aggregate representation that captures the relationship between the two sentences. The final hidden state corresponding to this token is used as the sequence representation for classification tasks.
+- **[SEP]** (Separator): Used to separate sentence pairs. When BERT processes a pair of sentences, the format is `[CLS] Sentence A [SEP] Sentence B [SEP]`. This explicit separator allows the model to distinguish between the two sentences.
+
+Together, these tokens enable BERT to perform tasks like next sentence prediction during pre-training and various downstream tasks involving sentence pairs (e.g., question answering, natural language inference).
+
+### Option 3: [CLS] and [NEXT]
+❌ **Incorrect.** While [CLS] is a legitimate BERT token as explained above, there is no [NEXT] token in BERT's vocabulary. BERT does perform a Next Sentence Prediction task during pre-training, but this is a training objective, not a special token.
+
+### Option 4: [SEP] and [MASK]
+❌ **Incorrect.** While both are valid BERT tokens, they serve different purposes. [SEP] is indeed used for sentence pairs as explained above, but [MASK] is used for the masked language modeling objective and is not specifically related to handling sentence pairs.
+
+The architecture of BERT for sentence pairs relies on the [CLS] token to represent the entire sequence and the [SEP] token to explicitly mark boundaries between sentences, making option 2 the correct answer.
+
+---
+# Question: ELMo and BERT represent two different pre-training strategies for language models. Which of the following statement(s) about these approaches is/are true?
+
+## Options
+1. ELMo uses a bi-directional LSTM to pre-train word representations, while BERT uses a transformer encoder with masked language modeling.
+2. ELMo provides context-independent word representations, whereas BERT provides context-dependent representations.
+3. Pre-training of both ELMo and BERT involve next token prediction.
+4. Both ELMo and BERT produce word embeddings that can be fine-tuned for downstream tasks.
+
+## Correct Answer
+**ELMo uses a bi-directional LSTM to pre-train word representations, while BERT uses a transformer encoder with masked language modeling.**
+
+## Explanation
+
+Let me analyze each statement:
+
+### Option 1: ELMo uses a bi-directional LSTM to pre-train word representations, while BERT uses a transformer encoder with masked language modeling.
+✅ **Correct.** This statement accurately describes the fundamental architectural differences between the two models:
+- ELMo (Embeddings from Language Models) uses a two-layer bidirectional LSTM architecture, processing text in both forward and backward directions.
+- BERT (Bidirectional Encoder Representations from Transformers) uses transformer encoder blocks with self-attention mechanisms and is pre-trained using masked language modeling (MLM), where the model learns to predict randomly masked tokens.
+
+### Option 2: ELMo provides context-independent word representations, whereas BERT provides context-dependent representations.
+❌ **Incorrect.** Both ELMo and BERT provide context-dependent word representations. In fact, ELMo was one of the first models to popularize contextual word embeddings, where a word's representation changes based on its surrounding context. The "Embeddings from Language Models" name emphasizes this contextual nature. BERT similarly produces context-dependent representations through its bidirectional attention mechanism.
+
+### Option 3: Pre-training of both ELMo and BERT involve next token prediction.
+❌ **Incorrect.** While ELMo does use a form of next token prediction (language modeling in both forward and backward directions), BERT specifically avoids traditional next token prediction. Instead, BERT uses:
+- Masked Language Modeling (MLM): predicting randomly masked tokens in a sentence
+- Next Sentence Prediction (NSP): predicting if two sentences appear consecutively in the original text
+
+BERT deliberately uses MLM instead of traditional next token prediction to enable true bidirectional representations.
+
+### Option 4: Both ELMo and BERT produce word embeddings that can be fine-tuned for downstream tasks.
+❌ **Incorrect.** There's an important distinction in how these models are typically used:
+- ELMo embeddings are generally used as fixed features that are added to task-specific architectures. The ELMo model itself isn't fine-tuned; rather, its representations are extracted and used alongside other components.
+- BERT is specifically designed to be fine-tuned end-to-end on downstream tasks. The entire pre-trained model is updated during task-specific training.
+
+The correct answer is the first statement, which accurately describes the architectural and pre-training differences between ELMo and BERT.
+
+---
+# Question: Decoder-only models are essentially trained based on probabilistic language modelling. Which of the following correctly represents the training objective of GPT-style models?
+
+## Options
+1. P(y | x) where x is the input sequence and y is the gold output sequence
+2. P(x ∣ y) where x is the input sequence and y is the gold output sequence
+3. P(wt ∣ w1:t−1), where wt represents the token at position t, and w1:t−1 is the sequence of tokens from position 1 to t-1
+4. P(wt ∣ w1:t+1), where wt represents the token at position t, and w1:t+1 is the sequence of tokens from position 1 to t+1
+
+## Correct Answer
+**P(wt ∣ w1:t−1), where wt represents the token at position t, and w1:t−1 is the sequence of tokens from position 1 to t-1**
+
+## Explanation
+
+### Option 1: P(y | x) where x is the input sequence and y is the gold output sequence
+❌ **Incorrect.** This formulation represents a conditional probability of generating an output sequence given an input sequence. This is characteristic of encoder-decoder models (like T5, BART, or sequence-to-sequence models) that are designed for tasks with distinct input and output sequences (e.g., translation, summarization). GPT-style decoder-only models don't typically operate with separate input/output sequences during pre-training but rather model a single continuous sequence.
+
+### Option 2: P(x ∣ y) where x is the input sequence and y is the gold output sequence
+❌ **Incorrect.** This represents the inverse conditional probability—the likelihood of an input given an output, which resembles a Bayesian posterior probability. This formulation is not used for language modeling in general, and specifically not for GPT-style models. It would be more relevant to discriminative tasks where you're trying to determine which input is most likely given an observed output.
+
+### Option 3: P(wt ∣ w1:t−1), where wt represents the token at position t, and w1:t−1 is the sequence of tokens from position 1 to t-1
+✅ **Correct.** This correctly represents the autoregressive language modeling objective used in GPT-style models. The model is trained to predict the probability distribution of the next token (wt) given all previous tokens in the sequence (w1:t−1). This captures the essence of autoregressive language modeling, where:
+- The model processes tokens from left to right
+- Each prediction is conditioned only on previous context (causal attention)
+- The model learns to maximize the likelihood of the actual next token in the training data
+- During generation, each new token is sampled based on the probability distribution conditioned on all previously generated tokens
+
+This autoregressive formulation enables GPT models to generate coherent text by repeatedly predicting one token at a time.
+
+### Option 4: P(wt ∣ w1:t+1), where wt represents the token at position t, and w1:t+1 is the sequence of tokens from position 1 to t+1
+❌ **Incorrect.** This formulation contains a logical inconsistency. The notation w1:t+1 indicates tokens from position 1 through position t+1, which would include both the current token wt and future tokens that come after position t. A model cannot condition its prediction on future tokens that haven't been generated yet (in an autoregressive setting). Additionally, conditioning on the token itself (wt) would create a circular dependency. This formulation violates the causal nature of decoder-only autoregressive models like GPT.
+
+The fundamental characteristic of GPT-style models is their autoregressive, left-to-right processing represented by option 3, where each token prediction depends only on previously seen tokens.
+
+---
+# Question: Calculating NumPy einsum Output with Matrices
+
+## Problem Statement
+In the question, we need to determine the output of the following NumPy operation:
+```python
+numpy.einsum('ij,ij->', A, B)
+```
+
+Where matrices A and B are defined as:
+- A = [1 5; 3 7]
+- B = [2 -1; 4 2]
+
+## Correct Answer
+**23**
+
+## Explanation
+
+The `einsum` function in NumPy implements Einstein summation convention, which is a powerful notation for operations on multi-dimensional arrays. Let's break down what this specific operation means:
+
+### Understanding the einsum notation 'ij,ij->'
+- `ij` represents the indices of the first matrix A (i for rows, j for columns)
+- The second `ij` represents the indices of matrix B
+- The arrow `->` followed by nothing means we're reducing all dimensions by summation
+
+### Step-by-step calculation
+
+1. First, let's identify what `'ij,ij->'` means conceptually:
+   - This performs element-wise multiplication of the matrices
+   - Then sums all resulting elements (since no indices remain after the arrow)
+
+2. Let's perform the element-wise multiplication:
+   ```
+   [1 5] ⊙ [2 -1] = [1×2  5×(-1)] = [2  -5]
+   [3 7]   [4  2]   [3×4  7×2]     [12  14]
+   ```
+   Where ⊙ represents element-wise multiplication
+
+3. Sum all elements of the resulting matrix:
+   ```
+   2 + (-5) + 12 + 14 = 23
+   ```
+
+This operation is equivalent to the Frobenius inner product of the two matrices, which can also be written as:
+```
+Σ(A[i,j] * B[i,j]) for all i,j
+```
+
+Therefore, the output of `numpy.einsum('ij,ij->', A, B)` is **23**.
