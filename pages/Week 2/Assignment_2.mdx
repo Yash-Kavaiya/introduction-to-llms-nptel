@@ -1,0 +1,292 @@
+# Assignment 2
+
+# 5-gram Models and Markov Order
+
+## Question
+A 5-gram model is a ___________ order Markov Model.
+
+## Options
+- Constant
+- Five
+- Six
+- Four
+
+## Correct Answer
+**Four**
+
+## Explanation
+
+A 5-gram model corresponds to a fourth-order Markov Model. Here's why:
+
+In natural language processing and probability theory, an n-gram model predicts the next item based on the previous (n-1) items in a sequence. The relationship between n-grams and Markov Models is:
+
+* **Order of Markov Model = n - 1**
+
+This relationship exists because:
+- A Markov Model of order m means the current state depends on m previous states
+- An n-gram model uses n consecutive items (with one being predicted based on the others)
+
+Therefore:
+* 1-gram (unigram): 0th order Markov Model (no context)
+* 2-gram (bigram): 1st order Markov Model
+* 3-gram (trigram): 2nd order Markov Model
+* 4-gram: 3rd order Markov Model
+* **5-gram: 4th order Markov Model**
+
+The "Constant" option is incorrect because a 0th order Markov Model corresponds to a unigram, not a 5-gram. "Five" is incorrect as it confuses the n-gram size with the Markov order. "Six" is simply incorrect by any calculation method.
+
+----
+
+# Maximum Likelihood Estimation (MLE) for Bigram Probability
+
+## Question
+For a given corpus, the count of occurrence of the unigram "stay" is 300. If the Maximum Likelihood Estimation (MLE) for the bigram "stay curious" is 0.4, what is the count of occurrence of the bigram "stay curious"?
+
+## Options
+- 123
+- 300
+- 750
+- 120
+
+## Correct Answer
+**120**
+
+## Explanation
+
+To solve this problem, we need to understand how Maximum Likelihood Estimation works for bigram models in natural language processing.
+
+The MLE probability of a bigram "stay curious" is calculated as:
+
+$P_{MLE}(curious|stay) = \frac{Count(stay~curious)}{Count(stay)}$
+
+This formula represents the conditional probability of "curious" following "stay" in the corpus.
+
+Given information:
+- Count of unigram "stay" = 300
+- MLE probability of bigram "stay curious" = 0.4
+
+Substituting these values into the formula:
+
+$0.4 = \frac{Count(stay~curious)}{300}$
+
+Solving for the count of "stay curious":
+
+$Count(stay~curious) = 0.4 \times 300 = 120$
+
+Therefore, the bigram "stay curious" occurs 120 times in the corpus.
+
+The options 123, 300, and 750 are all incorrect based on this calculation.
+
+---
+# Governing Principles for Probabilistic Language Models
+
+## Question
+Which of the following are governing principles for Probabilistic Language Models?
+- Chain Rule of Probability
+- Markov Assumption
+- Fourier Transform
+- Gradient Descent
+
+## Correct Answers
+- **Chain Rule of Probability**
+- **Markov Assumption**
+
+## Explanation
+
+### Chain Rule of Probability
+✓ **CORRECT**. The Chain Rule is a fundamental principle in probabilistic language modeling that allows us to decompose the joint probability of a sequence of words into a product of conditional probabilities:
+
+P(w₁, w₂, ..., wₙ) = P(w₁) × P(w₂|w₁) × P(w₃|w₁,w₂) × ... × P(wₙ|w₁,...,wₙ₋₁)
+
+This decomposition is essential for calculating the probability of entire sentences or text sequences and forms the mathematical foundation of language models.
+
+### Markov Assumption
+✓ **CORRECT**. The Markov Assumption states that the probability of the next word depends only on a fixed number of previous words, rather than the entire history. For an n-gram model:
+
+P(wₙ|w₁,...,wₙ₋₁) ≈ P(wₙ|wₙ₋ₙ₊₁,...,wₙ₋₁)
+
+This simplification makes language models computationally tractable while maintaining reasonable predictive power. N-gram models are classic examples of this principle in action.
+
+### Fourier Transform
+✗ **INCORRECT**. The Fourier Transform is a mathematical technique used primarily in signal processing to convert signals between time/space and frequency domains. While important in many fields, it is not a governing principle for probabilistic language models, which are based on statistical distributions of discrete symbols (words) rather than frequency analysis of continuous signals.
+
+### Gradient Descent
+✗ **INCORRECT**. Gradient Descent is an optimization algorithm used during the training process of neural network-based language models to minimize loss functions. While it's important for training modern language models, it's not a governing principle of how probabilistic language models fundamentally represent or calculate probabilities. It's a training method rather than a core theoretical foundation.
+
+-----
+
+# Bigram Language Model Probability and Perplexity
+
+## Corpus:
+- *\<s>*the sunset is nice*\</s>*
+- *\<s>*people watch the sunset*\</s>*
+- *\<s>*they enjoy the beautiful sunset*\</s>*
+
+## Question 4
+***2 points***
+
+Assuming a bi-gram language model, calculate the probability of the sentence: *\<s>*people watch the beautiful sunset*\</s>* Ignore the unigram probability of P(*\<s>*) in your calculation.
+
+### Options:
+- 2/27
+- 1/27
+- 2/9
+- 1/6
+
+### Correct Answer:
+**2/27**
+
+### Explanation:
+In a bigram model, we calculate the probability of a sentence as:
+P(sentence) = ∏ P(wᵢ|wᵢ₋₁)
+
+For our sentence "*\<s>*people watch the beautiful sunset*\</s>*", we need:
+P(people|*\<s>*) × P(watch|people) × P(the|watch) × P(beautiful|the) × P(sunset|beautiful) × P(*\</s>*|sunset)
+
+Let's compute each conditional probability by counting from our corpus:
+
+1. P(people|*\<s>*) = count(*\<s>* people) / count(*\<s>*) = 1/3
+2. P(watch|people) = count(people watch) / count(people) = 1/1 = 1
+3. P(the|watch) = count(watch the) / count(watch) = 1/1 = 1
+4. P(beautiful|the) = count(the beautiful) / count(the) = 1/3
+5. P(sunset|beautiful) = count(beautiful sunset) / count(beautiful) = 1/1 = 1
+6. P(*\</s>*|sunset) = count(sunset *\</s>*) / count(sunset) = 2/3
+
+Multiplying these probabilities:
+P(sentence) = (1/3) × 1 × 1 × (1/3) × 1 × (2/3) = 2/27
+
+## Question 5
+***2 points***
+
+Assuming a bi-gram language model, calculate the perplexity of the sentence: *\<s>*people watch the beautiful sunset*\</s>* Do not consider *\<s>* and *\</s>* in the count of words of the sentence.
+
+### Options:
+- 27¹/⁴
+- 27¹/⁵
+- 9¹/⁶
+- (27/2)¹/⁵
+
+### Correct Answer:
+**(27/2)¹/⁵**
+
+### Explanation:
+The perplexity of a language model on a test set is the inverse probability of the test set, normalized by the number of words:
+
+PP(W) = P(w₁, w₂, ..., wₙ)^(-1/n)
+
+Where:
+- P(w₁, w₂, ..., wₙ) is the probability of the sentence
+- n is the number of words in the sentence (excluding start and end tokens)
+
+From Question 4, we calculated P(sentence) = 2/27
+
+The number of words in our sentence (excluding *\<s>* and *\</s>*) is 5: "people", "watch", "the", "beautiful", "sunset"
+
+Therefore:
+PP = (2/27)^(-1/5) = (27/2)^(1/5)
+
+This simplifies to (27/2)¹/⁵, which is our answer.
+
+----
+
+# Kneser-Ney Smoothing in Language Models
+
+## Question
+What is the main intuition behind Kneser-Ney smoothing?
+
+## Options
+- Assign higher probability to frequent words.
+- Use continuation probability to better model words appearing in a novel context.
+- Normalize probabilities by word length.
+- Minimize perplexity for unseen words.
+
+## Correct Answer
+**Use continuation probability to better model words appearing in a novel context.**
+
+## Explanation
+
+### Option: Assign higher probability to frequent words.
+❌ **Incorrect.** This describes a basic principle of most language models, including simple Maximum Likelihood Estimation. While Kneser-Ney does consider word frequencies, this doesn't capture its distinctive contribution to smoothing techniques. Simple frequency-based models fail to properly handle novel word combinations.
+
+### Option: Use continuation probability to better model words appearing in a novel context.
+✅ **Correct.** The key insight behind Kneser-Ney smoothing is its focus on a word's *versatility* rather than just its raw frequency. It measures how many different contexts a word appears in (its "continuation probability") rather than just counting occurrences. For example, if we've never seen "Francisco" except after "San," standard smoothing methods would give "Francisco" a high probability in all contexts, but Kneser-Ney recognizes it appears in limited contexts and adjusts accordingly. This makes it particularly effective for modeling words in novel contexts.
+
+### Option: Normalize probabilities by word length.
+❌ **Incorrect.** Kneser-Ney smoothing does not consider word length in its probability calculations. Word length is not relevant to the statistical distributions that Kneser-Ney aims to model.
+
+### Option: Minimize perplexity for unseen words.
+❌ **Incorrect.** While Kneser-Ney smoothing does improve handling of unseen word combinations and generally reduces perplexity compared to simpler methods, this description is too generic. It describes the goal of most smoothing techniques but fails to capture the specific mechanism (continuation probability) that makes Kneser-Ney distinctive and effective.
+
+Kneser-Ney's power comes from its sophisticated approach to handling the "rich get richer" problem in language modeling, where it redistributes probability mass based on a word's lexical diversity rather than just its frequency.
+
+-------
+
+# Perplexity in Language Model Evaluation
+
+## Question
+In perplexity-based evaluation of a language model, what does a lower perplexity score indicate?
+
+## Options
+- Worse model performance
+- Better language model performance
+- Increased vocabulary size
+- More sparse data
+
+## Correct Answer
+**Better language model performance**
+
+## Explanation
+
+### Worse model performance
+❌ **Incorrect**. This is the opposite of what perplexity indicates. In language model evaluation, we aim to minimize perplexity, not maximize it. A higher perplexity would actually indicate worse performance.
+
+### Better language model performance
+✅ **Correct**. Perplexity measures how "surprised" or "perplexed" a model is when encountering test data. Mathematically, perplexity is defined as the inverse probability of the test set, normalized by the number of words: PP(W) = P(w₁,w₂,...,wₙ)^(-1/n). A lower perplexity score means the model assigns higher probability to the correct words and is therefore better at predicting the text. The best possible perplexity score would be 1, indicating perfect prediction.
+
+### Increased vocabulary size
+❌ **Incorrect**. Perplexity is not a direct measure of vocabulary size. While vocabulary size can influence model complexity, perplexity specifically measures predictive performance. In fact, models with the same vocabulary size can have vastly different perplexity scores depending on their architecture and training.
+
+### More sparse data
+❌ **Incorrect**. Perplexity does not indicate data sparsity. On the contrary, sparse training data often leads to models with higher (worse) perplexity scores due to insufficient learning opportunities. Perplexity measures how well the model predicts unseen data, not the characteristics of the data itself.
+
+In summary, perplexity is a standard evaluation metric where lower values indicate better language model performance—the model is making more accurate predictions about the test data.
+
+------
+
+# Limitations of Statistical Language Models
+
+## Question
+Which of the following is a limitation of statistical language models like n-grams?
+- Fixed context size
+- High memory requirements for large vocabularies
+- Difficulty in generalizing to unseen data
+- All of the above
+
+## Correct Answer
+**All of the above**
+
+## Explanation
+
+### Fixed context size
+✓ This is a fundamental limitation of n-gram models. These models only consider a fixed window of n-1 previous words when predicting the next word. For example:
+- A bigram model only looks at the previous word
+- A trigram model only considers the previous two words
+- A 4-gram model considers the previous three words
+
+This fixed-length context means n-gram models cannot capture long-range dependencies or understand broader document context, regardless of how much training data is available.
+
+### High memory requirements for large vocabularies
+✓ The space complexity of n-gram models grows exponentially with both n and vocabulary size. For a vocabulary of size V, an n-gram model potentially needs to store up to V^n parameters:
+- A bigram model with 10,000 words requires up to 10,000² = 100 million parameters
+- A trigram model with the same vocabulary could require up to 10,000³ = 1 trillion parameters
+
+This exponential growth makes higher-order n-grams computationally prohibitive without aggressive pruning or smoothing techniques.
+
+### Difficulty in generalizing to unseen data
+✓ Statistical language models struggle with the data sparsity problem. Many valid word sequences never appear in training data, leading to zero probabilities for unseen combinations. This is known as the zero-probability problem.
+
+While smoothing techniques (like Laplace, Good-Turing, or Kneser-Ney) can redistribute probability mass to unseen events, n-gram models still fundamentally lack the semantic understanding needed for robust generalization to novel contexts.
+
+### All of the above
+✓ **Correct.** All three limitations apply to statistical language models like n-grams, making this the comprehensive answer. These limitations collectively explain why traditional n-gram models have largely been superseded by neural language models, which address many of these shortcomings through distributed representations and more flexible architectures.
+
