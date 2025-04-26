@@ -1,0 +1,356 @@
+# Week 5 : Assignment 5
+
+# Recurrent Neural Network (RNN) Disadvantages Analysis
+
+## Question
+Which of the following is a disadvantage of Recurrent Neural Networks (RNNs)?
+- Can only process fixed-length inputs.
+- Symmetry in how inputs are processed.
+- Difficulty accessing information from many steps back.
+- Weights are not reused across timesteps.
+
+## Correct Answer
+**Difficulty accessing information from many steps back.**
+
+## Detailed Explanation
+
+Let's analyze each option:
+
+### Can only process fixed-length inputs
+**Incorrect.** This is actually one of the advantages of RNNs, not a disadvantage. RNNs are specifically designed to handle variable-length input sequences, making them suitable for tasks like natural language processing, time series analysis, and speech recognition where input lengths vary. Their recurrent structure allows them to process sequences one element at a time while maintaining an internal state.
+
+### Symmetry in how inputs are processed
+**Incorrect.** The sequential processing nature of RNNs, where inputs are processed one after another while maintaining state information, is generally considered an advantage. This property allows RNNs to capture temporal dependencies in sequential data, which is essential for many applications.
+
+### Difficulty accessing information from many steps back
+**Correct.** This is a genuine limitation of basic RNNs. They suffer from the "vanishing gradient problem," where gradients that are backpropagated through many time steps become extremely small. This makes it difficult for the network to learn long-term dependencies, as information from many steps back effectively vanishes during training. This limitation led to the development of specialized architectures like LSTM (Long Short-Term Memory) and GRU (Gated Recurrent Unit) networks that were specifically designed to address this issue.
+
+### Weights are not reused across timesteps
+**Incorrect.** Weight sharing across timesteps is a fundamental characteristic of RNNs, not a disadvantage. In fact, this parameter sharing is what allows RNNs to process sequences of arbitrary length using a fixed number of parameters, making them more efficient and better at generalizing across sequences of different lengths.
+
+---------
+
+# RNNs vs. Fixed-Window Neural Models
+
+## Question
+Why are RNNs preferred over fixed-window neural models?
+- They have a smaller parameter size.
+- They can process sequences of arbitrary length.
+- They eliminate the need for embedding layers.
+- None of the above.
+
+## Correct Answer
+**They can process sequences of arbitrary length.**
+
+## Detailed Explanation
+
+Let's analyze each option:
+
+### They have a smaller parameter size
+**Incorrect.** Parameter size is not inherently smaller in RNNs compared to fixed-window neural models. In fact, some RNN variants like LSTMs and GRUs can have more parameters per unit due to their additional gating mechanisms. The parameter count depends more on the specific architecture design (number of layers, hidden units, etc.) rather than whether the model is recurrent or fixed-window.
+
+### They can process sequences of arbitrary length
+**Correct.** This is the primary advantage of RNNs over fixed-window models. Fixed-window approaches must specify a maximum sequence length in advance and typically use padding or truncation to handle inputs of varying lengths. This can lead to either computational inefficiency (processing unnecessary padding) or information loss (when truncating longer sequences).
+
+RNNs, by contrast, process inputs sequentially while maintaining an internal state that captures information from previous timesteps. This recurrent structure allows them to naturally handle variable-length sequences without modification, making them particularly well-suited for tasks like natural language processing, speech recognition, and time series analysis where input lengths vary widely.
+
+### They eliminate the need for embedding layers
+**Incorrect.** The need for embedding layers is determined by the type of input data, not the network architecture. Both RNNs and fixed-window models typically use embedding layers when processing discrete tokens (like words or characters). Embedding layers convert these discrete tokens into continuous vector representations that neural networks can process effectively. RNNs do not eliminate this requirement.
+
+### None of the above
+**Incorrect.** As explained, RNNs do offer the significant advantage of being able to process sequences of arbitrary length, making this option false.
+----
+
+# LSTM Cell State Functionality
+
+## Question
+What is the primary purpose of the cell state in an LSTM?
+- Store short-term information.
+- Control the gradient flow across timesteps.
+- Store long-term information.
+- Perform the activation function.
+
+## Correct Answer
+**Store long-term information.**
+
+## Detailed Explanation
+
+Let's analyze each option:
+
+### Store short-term information
+**Incorrect.** The short-term information in an LSTM is primarily maintained by the hidden state (h_t), not the cell state. The hidden state captures more recent information and is updated at each timestep based on the current input and previous states. It's often used as the output of the LSTM unit and passed to the next layer in the network.
+
+### Control the gradient flow across timesteps
+**Incorrect.** While the LSTM architecture as a whole was designed to address the vanishing/exploding gradient problems that plague standard RNNs, this is not the primary purpose of the cell state specifically. The controlled gradient flow is achieved through the gating mechanisms (input, forget, and output gates) that regulate information flow. These gates help maintain a more constant error flow, but this is a property of the overall LSTM design rather than the cell state's specific purpose.
+
+### Store long-term information
+**Correct.** This is indeed the primary purpose of the cell state (C_t) in an LSTM. The cell state acts as a memory highway that runs through the entire sequence, allowing information to flow through many timesteps with minimal alteration. The carefully regulated cell state, controlled by the forget gate and input gate, can maintain relevant information over extended sequences. This is what enables LSTMs to learn and remember long-term dependencies, which was the key innovation over standard RNNs.
+
+### Perform the activation function
+**Incorrect.** Activation functions in LSTMs (typically sigmoid for gates and tanh for cell state candidates) are applied to transform values within the LSTM, but the cell state itself doesn't perform activation functions. Its primary role is to store and carry information, not to apply non-linear transformations. The output from the cell state may pass through an activation function before being combined with the output gate to produce the hidden state, but this is distinct from the cell state's purpose.
+
+The LSTM's ability to selectively remember information over long periods through its cell state is what made it revolutionary for sequence modeling tasks, particularly those requiring long-range dependencies.
+
+-----
+
+# RNN Training Techniques
+
+## Question
+In training an RNN, what technique is used to calculate gradients over multiple timesteps?
+- Backpropagation through Time (BPTT)
+- Stochastic Gradient Descent (SGD)
+- Dropout Regularization
+- Layer Normalization
+
+## Correct Answer
+**Backpropagation through Time (BPTT)**
+
+## Detailed Explanation
+
+Let's analyze each option:
+
+### Backpropagation through Time (BPTT)
+**Correct.** BPTT is the fundamental algorithm used to train recurrent neural networks. Standard backpropagation cannot be directly applied to RNNs because of their recurrent connections across time steps. BPTT works by "unrolling" the recurrent network into a feedforward network through time (with each time step becoming a separate layer) and then applying backpropagation. This allows gradients to flow backward from later time steps to earlier ones, enabling the network to learn temporal dependencies. 
+
+The key insight of BPTT is that an RNN's parameters are shared across all time steps, so the gradients from each time step must be accumulated to update these shared weights. This process can be computationally expensive for long sequences, which led to variants like truncated BPTT that limit how far back in time the gradients flow.
+
+### Stochastic Gradient Descent (SGD)
+**Incorrect.** SGD is an optimization algorithm used to update model parameters based on computed gradients, not a technique for calculating the gradients themselves. While SGD (or its variants like Adam, RMSprop, etc.) is indeed used in conjunction with BPTT to train RNNs, it handles the parameter update step after the gradients have already been calculated using BPTT. In other words, BPTT tells us how to compute the gradients, while SGD tells us how to use those gradients to update the weights.
+
+### Dropout Regularization
+**Incorrect.** Dropout is a regularization technique designed to prevent overfitting by randomly "dropping" (setting to zero) a proportion of neurons during training. While dropout can be applied to RNNs (with special considerations for the recurrent connections), it is not a method for calculating gradients. Rather, it's a technique that affects how the network processes data during the forward pass and consequently influences the gradients calculated during backpropagation.
+
+### Layer Normalization
+**Incorrect.** Layer normalization is a technique that normalizes the inputs across features for each training example. It's particularly useful in RNNs to stabilize the hidden state dynamics and accelerate training. Like dropout, layer normalization affects how data flows through the network and can improve training stability, but it is not a method for calculating gradients across time steps. It's a transformation applied during the forward pass that affects the subsequent gradient calculation.
+
+BPTT remains the core algorithm for training RNNs by enabling gradient calculation through the temporal dimension, despite challenges like vanishing/exploding gradients that have led to architectural innovations like LSTMs and GRUs.
+
+---------
+
+# RNN Parameter Calculation
+
+## Question
+Consider a simple RNN:
+● Input vector size: 3
+● Hidden state size: 4
+● Output vector size: 2
+● Number of timesteps: 5
+How many parameters are there in total, including the bias terms?
+- 210
+- 190
+- 90
+- 42
+
+## Correct Answer
+**42**
+
+## Detailed Explanation
+
+To calculate the total number of parameters in a simple RNN, we need to identify all weight matrices and bias vectors in the architecture and sum their elements.
+
+The standard RNN architecture has the following components:
+
+### Input-to-Hidden Weight Matrix (W_ih)
+- Dimensions: (hidden_size, input_size) = (4, 3)
+- Parameter count: 4 × 3 = 12 parameters
+
+### Hidden-to-Hidden Weight Matrix (W_hh)
+- Dimensions: (hidden_size, hidden_size) = (4, 4)
+- Parameter count: 4 × 4 = 16 parameters
+
+### Hidden-to-Output Weight Matrix (W_ho)
+- Dimensions: (output_size, hidden_size) = (2, 4)
+- Parameter count: 2 × 4 = 8 parameters
+
+### Hidden Bias Vector (b_h)
+- Dimensions: (hidden_size,) = (4,)
+- Parameter count: 4 parameters
+
+### Output Bias Vector (b_o)
+- Dimensions: (output_size,) = (2,)
+- Parameter count: 2 parameters
+
+### Total Parameter Count
+12 + 16 + 8 + 4 + 2 = **42 parameters**
+
+**Important note**: The number of timesteps (5) does not affect the parameter count because RNNs use parameter sharing across all timesteps. This weight reuse is a fundamental property of RNNs that allows them to process sequences of arbitrary length with a fixed number of parameters.
+
+The forward pass in this RNN would be represented by:
+- Hidden state update: h_t = tanh(W_ih · x_t + W_hh · h_{t-1} + b_h)
+- Output: y_t = W_ho · h_t + b_o
+
+All other answer options (210, 190, 90) incorrectly account for the parameters, possibly by:
+- Mistakenly counting separate parameters for each timestep
+- Including non-existent parameters
+- Double-counting certain matrices
+
+-----
+# Time Complexity of RNN Sequence Processing
+
+## Question
+What is the time complexity for processing a sequence of length 'N' by an RNN, if the input embedding dimension, hidden state dimension, and output vector dimension are all 'd'?
+- O(N)
+- O(N²d)
+- O(Nd)
+- O(Nd²)
+
+## Correct Answer
+**O(Nd²)**
+
+## Detailed Explanation
+
+To determine the time complexity, we need to analyze the computational operations performed at each timestep and then multiply by the number of timesteps.
+
+### Analysis by RNN Operations
+
+For each timestep t (from 1 to N), a standard RNN performs these major operations:
+
+1. **Input-to-Hidden Computation**: 
+   - Operation: W_ih × x_t
+   - Dimensions: (d×d) × (d×1)
+   - Complexity: O(d²) for this matrix-vector multiplication
+
+2. **Hidden-to-Hidden Computation**:
+   - Operation: W_hh × h_(t-1)
+   - Dimensions: (d×d) × (d×1)
+   - Complexity: O(d²) for this matrix-vector multiplication
+
+3. **Bias Addition and Activation**:
+   - Adding hidden bias vector: O(d)
+   - Applying activation function (typically tanh or ReLU): O(d)
+
+4. **Hidden-to-Output Computation**:
+   - Operation: W_ho × h_t
+   - Dimensions: (d×d) × (d×1)
+   - Complexity: O(d²) for this matrix-vector multiplication
+
+5. **Output Bias Addition**:
+   - Adding output bias vector: O(d)
+
+### Total Complexity Calculation
+
+For a single timestep:
+- Dominant operations: Three matrix-vector multiplications, each O(d²)
+- Total complexity per timestep: O(d²) + O(d²) + O(d) + O(d) + O(d²) + O(d) = O(d²)
+
+For the entire sequence of length N:
+- We perform the above operations N times
+- Total complexity: N × O(d²) = O(Nd²)
+
+### Why Other Options Are Incorrect
+
+- **O(N)**: This ignores the computational cost associated with the dimension d. It would only be correct if operations at each timestep were constant time regardless of dimensionality.
+
+- **O(N²d)**: This would imply that the algorithm's complexity grows quadratically with sequence length, which is not the case for a standard RNN. RNNs process each timestep sequentially with no quadratic relationship between timesteps.
+
+- **O(Nd)**: This underestimates the impact of dimensionality. Matrix operations in RNNs scale quadratically (not linearly) with the dimension size due to matrix multiplication.
+
+The correct time complexity O(Nd²) accurately reflects that an RNN processes N timesteps sequentially, with each timestep requiring computational work that scales quadratically with the dimension d.
+
+------
+# Seq2Seq Model Properties Analysis
+
+## Question
+Which of the following is true about Seq2Seq models?
+(i) Seq2Seq models are always conditioned on the source sentence.
+(ii) The encoder compresses the input sequence into a fixed-size vector representation.
+(iii) Seq2Seq models cannot handle variable-length sequences.
+
+- (i) and (ii)
+- (ii) only
+- (iii) only
+- (i), (ii), and (iii)
+
+## Correct Answer
+**(i) and (ii)**
+
+## Detailed Explanation
+
+Let's analyze each statement individually:
+
+### Statement (i): Seq2Seq models are always conditioned on the source sentence.
+**TRUE**. This is a fundamental characteristic of Sequence-to-Sequence models. By definition, Seq2Seq models generate an output sequence based on an input sequence (the source). The decoder generates each token of the output sequence conditioned on:
+1. The encoded representation of the source sequence
+2. Previously generated tokens in the target sequence
+
+This conditioning on the source sequence is what makes Seq2Seq models effective for tasks like machine translation, summarization, and question answering. Without this conditioning on the source, it would not qualify as a Seq2Seq model.
+
+### Statement (ii): The encoder compresses the input sequence into a fixed-size vector representation.
+**TRUE**. In traditional Seq2Seq architectures (especially pre-attention models), the encoder processes the entire input sequence and compresses all the information into a fixed-dimensional context vector (typically the final hidden state of the encoder RNN). This vector serves as the initial hidden state for the decoder and is meant to capture the entire meaning of the source sequence.
+
+Even with attention mechanisms (which allow the decoder to focus on different parts of the input sequence), the encoder still creates fixed-size representations for each token in the input sequence. The dimensionality of these representations remains constant regardless of sequence length.
+
+### Statement (iii): Seq2Seq models cannot handle variable-length sequences.
+**FALSE**. One of the key advantages of Seq2Seq models is precisely their ability to process variable-length sequences. They can:
+- Accept input sequences of varying lengths
+- Generate output sequences of varying lengths
+- Accommodate these variations without changing the model architecture
+
+This flexibility is what makes Seq2Seq models particularly suitable for translation tasks, where source and target sentences naturally vary in length. The model architecture inherently supports this through mechanisms like padding, masking, and the sequential nature of RNNs or the parallel processing capabilities of Transformers.
+
+### Conclusion
+Since statements (i) and (ii) are true, while statement (iii) is false, the correct answer is "(i) and (ii)".
+
+---------
+
+# Attention Score Computation with Dot Product Scoring
+
+## Question
+Given the following encoder and decoder hidden states, compute the attention scores. (Use dot product as the scoring function)
+Encoder hidden states: h1 = [1,2], h2 = [3,4], h3 = [5,6]
+Decoder hidden state: s = [0.5,1]
+
+- 0.00235, 0.04731, 0.9503
+- 0.0737, 0.287, 0.6393
+- 0.9503, 0.0137, 0.036
+- 0.6393, 0.0737, 0.287
+
+## Correct Answer
+**0.00235, 0.04731, 0.9503**
+
+## Detailed Explanation
+
+To solve this problem, we need to follow a systematic process:
+
+1. **Calculate the dot product scores** between each encoder hidden state and the decoder hidden state
+2. **Apply softmax** to convert these scores into a probability distribution (attention weights)
+
+### Step 1: Computing the dot products
+
+For each encoder hidden state h_i and the decoder state s, the dot product is:
+score(h_i, s) = h_i · s = sum(h_i[j] × s[j]) for all j
+
+For h1 = [1,2] and s = [0.5,1]:
+* score(h1, s) = (1 × 0.5) + (2 × 1) = 0.5 + 2 = **2.5**
+
+For h2 = [3,4] and s = [0.5,1]:
+* score(h2, s) = (3 × 0.5) + (4 × 1) = 1.5 + 4 = **5.5**
+
+For h3 = [5,6] and s = [0.5,1]:
+* score(h3, s) = (5 × 0.5) + (6 × 1) = 2.5 + 6 = **8.5**
+
+### Step 2: Applying softmax to get attention weights
+
+The softmax function is defined as:
+softmax(x_i) = exp(x_i) / sum(exp(x_j)) for all j
+
+Computing the exponentials:
+* exp(2.5) ≈ 12.1825
+* exp(5.5) ≈ 244.6919
+* exp(8.5) ≈ 4914.7688
+
+Sum of exponentials: 12.1825 + 244.6919 + 4914.7688 = 5171.6432
+
+Computing the attention weights:
+* Attention weight for h1: 12.1825 / 5171.6432 ≈ **0.00235**
+* Attention weight for h2: 244.6919 / 5171.6432 ≈ **0.04731**
+* Attention weight for h3: 4914.7688 / 5171.6432 ≈ **0.9503**
+
+Therefore, the attention weights are [0.00235, 0.04731, 0.9503], matching the first option.
+
+### Why This Distribution Makes Sense
+
+The attention mechanism heavily favors h3 (with ~95% of the attention weight) because its dot product with the decoder state yielded the highest score. This indicates that the content in h3 is most relevant to the current decoding step. This behavior is typical in attention mechanisms, where the model focuses primarily on the most relevant parts of the input sequence when generating each output token.
+
+-------
+
