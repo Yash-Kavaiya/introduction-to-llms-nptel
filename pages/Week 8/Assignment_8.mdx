@@ -1,0 +1,93 @@
+# Assignment 8
+
+# Which factors influence the effectiveness of instruction tuning?
+
+## Original Options:
+- The number of instruction templates used in training.
+- The tokenization algorithm used by the model.
+- The diversity of tasks in the fine-tuning dataset.
+- The order in which tasks are presented during fine-tuning.
+
+## Correct Answer:
+- The number of instruction templates used in training.
+- The diversity of tasks in the fine-tuning dataset.
+- The order in which tasks are presented during fine-tuning.
+
+## Detailed Explanation:
+
+### Correct Factors:
+
+**1. The number of instruction templates used in training**
+- Multiple instruction templates expose the model to various ways instructions can be phrased
+- This improves generalization across different instruction formats and phrasings
+- Models trained with diverse templates better understand the intent behind instructions regardless of specific wording
+- Research shows that increasing template diversity reduces overfitting to specific instruction patterns
+
+**2. The diversity of tasks in the fine-tuning dataset**
+- A wide range of tasks helps the model develop general instruction-following capabilities
+- Task diversity prevents the model from specializing in only a few types of instructions
+- Balanced representation across reasoning, generation, classification, and other task types creates a more versatile model
+- Studies demonstrate that models trained on heterogeneous task distributions perform better on unseen tasks
+
+**3. The order in which tasks are presented during fine-tuning**
+- Task ordering creates different learning dynamics during training
+- Curriculum learning (starting with simpler tasks and progressing to more complex ones) can improve convergence
+- Task interleaving strategies affect how well models retain knowledge of different instruction types
+- The spacing and repetition of task types influences knowledge retention and generalization
+
+### Incorrect Factor:
+
+**The tokenization algorithm used by the model**
+- Tokenization is determined during pre-training and typically remains fixed during instruction tuning
+- While important for overall model performance, tokenization isn't directly manipulated during the instruction tuning phase
+- The same tokenization algorithm can produce models with vastly different instruction-following capabilities depending on the tuning approach
+- Instruction tuning effectiveness is primarily about learning from examples rather than changing how text is tokenized
+
+---
+# What are key challenges of soft prompts in prompt-based learning?
+
+## Multiple-Choice Options:
+- Forward pass with them is computationally inefficient compared to that with hard prompts.
+- They require additional training, unlike discrete prompts.
+- They cannot be interpreted or used effectively by non-expert users.
+- They require specialized architectures that differ from standard transformers.
+
+## Correct Answer:
+- They require additional training, unlike discrete prompts.
+- They cannot be interpreted or used effectively by non-expert users.
+
+## Detailed Explanation:
+
+### They require additional training, unlike discrete prompts ✓
+Soft prompts, being continuous vectors in the embedding space, must be learned through optimization during a dedicated training phase. This creates several challenges:
+- Each new task or adaptation requires a separate training procedure
+- Finding optimal hyperparameters for this training adds complexity
+- The training process consumes additional computational resources
+- Training stability can be an issue without proper initialization strategies
+
+In contrast, discrete prompts (hard prompts) can be immediately crafted in natural language without any optimization process.
+
+### They cannot be interpreted or used effectively by non-expert users ✓
+Soft prompts exist as continuous vectors in embedding space with no direct correspondence to human language, leading to significant usability challenges:
+- Non-experts cannot read, understand, or manually modify these vectors
+- Debugging problematic soft prompts requires technical expertise
+- There's a lack of transparency in how these prompts function
+- The "black box" nature makes them difficult to trust or verify
+
+Discrete prompts, being natural language, allow for intuitive human understanding and modification.
+
+### Forward pass with them is computationally inefficient compared to that with hard prompts ✗
+This is incorrect. Soft prompts do not significantly increase computational requirements during inference:
+- The forward pass with soft prompts processes the same number of embedding vectors
+- In many cases, soft prompts can be shorter than equivalent textual instructions
+- Modern implementations have optimized the efficiency of soft prompt inference
+- The computational bottleneck remains in the transformer layers, not the prompt processing
+
+### They require specialized architectures that differ from standard transformers ✗
+This is incorrect. Soft prompts work within standard transformer architectures:
+- They typically replace or augment the input embeddings without architectural changes
+- Methods like P-tuning, prefix-tuning, and prompt-tuning all operate on conventional transformer models
+- The same pre-trained language model can be used with both soft and hard prompts
+- No structural modifications to the attention mechanisms or feed-forward networks are required
+
+----
